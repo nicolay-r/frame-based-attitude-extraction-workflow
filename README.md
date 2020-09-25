@@ -1,1 +1,1 @@
-# frame-based-attitude-extraction-workflow
+# Frame-Based Attitude Extraction Workflow
