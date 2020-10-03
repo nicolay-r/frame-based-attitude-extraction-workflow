@@ -1,3 +1,6 @@
 *.pyc
 .idea
 *.json
+*.gz
+*.xml
+core

@@ -88,7 +88,7 @@ if __name__ == "__main__":
     parser.add_argument('--diff-pairs-list',
                         dest='pairs_list_filepath',
                         nargs='?',
-                        default=join(io_utils.get_relation_root(), 'ruattitudes_v10_pairs_list.txt'),
+                        # default=join(io_utils.get_relation_root(), 'ruattitudes_v10_pairs_list.txt'),
                         help="[<{tasks}> only] Pairs list filepath".format(
                             tasks=",".join([TASK_DIFF_EXTRACTION, TASK_EXTRACTION_BY_PAIRS])))
 

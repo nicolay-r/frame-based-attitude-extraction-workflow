@@ -1,6 +1,4 @@
-from os.path import join
-
-import io_utils
+from collections import OrderedDict
 
 from core.helpers.frames import FramesHelper
 from core.processing.pos.mystem_wrap import POSMystemWrapper
@@ -77,9 +75,11 @@ class Settings(object):
             filepath=synonyms_collection_filepath,
             stemmer=None if self.DISABLE_LEMMA_FOR_SYNONYMS else self.__stemmer)
 
-        self.__auth_objects = AuthorizedObjectsCollection.from_relations_file(
-            filepath=join(io_utils.get_objects_root(), "relevant_relations.txt"),
-            synonyms=self.__synonyms)
+        self.__auth_objects = AuthorizedObjectsCollection(OrderedDict())
+
+        # self.__auth_objects = AuthorizedObjectsCollection.from_relations_file(
+        #     filepath=join(io_utils.get_objects_root(), "relevant_relations.txt"),
+        #     synonyms=self.__synonyms)
 
     # region properties
 
