@@ -2,7 +2,7 @@
 from os import path
 
 from texts.readers.base import BaseNewsReader
-from texts.extraction.second.process import FrameDependentTextProcessor
+from texts.extraction.frame_based.process import FrameDependentTextProcessor
 from texts.extraction.settings import Settings
 from texts.printing.contexts import ContextsPrinter
 from texts.printing.statistics.base import OpinionStatisticBasePrinter

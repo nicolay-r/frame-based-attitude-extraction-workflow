@@ -1,7 +1,7 @@
 from core.evaluation.labels import NeutralLabel
 from core.runtime.parser import ParsedText
 from core.runtime.ref_opinon import RefOpinion
-from texts.extraction.second.process import FrameDependentTextProcessor
+from texts.extraction.frame_based.process import FrameDependentTextProcessor
 from texts.printing.quiz import QuizPrinter
 from texts.printing.utils import ContextDescriptor
 

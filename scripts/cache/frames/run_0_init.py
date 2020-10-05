@@ -15,7 +15,7 @@ from scripts.args.src_news_reader import SourceNewsReaderArg
 from scripts.args.news import NewsStartFromIndexArg
 from scripts.args.frames import ParseFramesInSentencesArgs
 from scripts.args.rusentiframes import RuSentiFramesCacheArgs
-from texts.extraction.second.utils import get_frames_polarities
+from texts.extraction.frame_based.utils import get_frames_polarities
 from texts.extraction.default import Default
 from texts.frames import TextFrameVariantsCollection
 from texts.objects.cache.sqlite_frames_cache import SQLiteFramesCacheData

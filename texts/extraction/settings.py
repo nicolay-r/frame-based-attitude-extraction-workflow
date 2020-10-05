@@ -6,7 +6,7 @@ from core.processing.pos.mystem_wrap import POSMystemWrapper
 from texts.ner_wraps import supported
 from texts.extraction.default import Default
 
-from texts.extraction.second.limits import NerTypesLimitation
+from texts.extraction.frame_based.limits import NerTypesLimitation
 from texts.ner_wraps.deep_ner import LocalDeepNERWrap
 from texts.ner_wraps.deepavlov_bert_ner import DeepPavlovBertNERWrap
 from texts.objects.authorized.collection import AuthorizedObjectsCollection

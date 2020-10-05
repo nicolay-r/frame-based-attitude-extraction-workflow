@@ -3,9 +3,9 @@ from os import path
 
 from texts.readers.base import BaseNewsReader
 from texts.extraction.diff.process import DiffTextProcessor
-from texts.extraction.first import utils
-from texts.extraction.first.process import OpinionDependentTextProcessor
-from texts.extraction.second.process import FrameDependentTextProcessor
+from texts.extraction.pair_based import utils
+from texts.extraction.pair_based.process import OpinionDependentTextProcessor
+from texts.extraction.frame_based.process import FrameDependentTextProcessor
 from texts.extraction.settings import Settings
 from texts.printing.contexts import ContextsPrinter
 from texts.printing.diffcontexts import DiffContextsPrinter

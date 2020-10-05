@@ -11,7 +11,7 @@ from scripts.args.ner_cache import NerCacheFilepathArg
 from scripts.args.ner_type import NerTypeArg
 from scripts.args.src_news_dir import NewsSourceDirArg
 from scripts.args.out_dir import OutputDirArg
-from texts.extraction.second.limits import NerTypesLimitation
+from texts.extraction.frame_based.limits import NerTypesLimitation
 from texts.extraction import parsed_news_utils
 from texts.extraction.settings import Settings
 from texts.objects.helper import TextObjectHelper

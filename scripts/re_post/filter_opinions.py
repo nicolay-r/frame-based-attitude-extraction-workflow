@@ -8,7 +8,7 @@ from os.path import join, basename, dirname
 from core.evaluation.labels import NeutralLabel
 from core.source.opinion import Opinion, OpinionCollection
 from scripts.args.synonyms import SynonymsCollectionFilepathArg
-from texts.extraction.first.utils import read_opinions
+from texts.extraction.pair_based.utils import read_opinions
 from texts.printing.statistics.base import OpinionStatisticBasePrinter
 from texts.extraction.default import Default
 

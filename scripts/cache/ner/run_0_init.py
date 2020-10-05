@@ -12,7 +12,7 @@ from scripts.args.src_news_dir import NewsSourceDirArg
 from scripts.args.src_news_reader import SourceNewsReaderArg
 from texts.extraction.default import Default
 from texts.extraction.settings import Settings
-from texts.extraction.second.limits import NerTypesLimitation
+from texts.extraction.frame_based.limits import NerTypesLimitation
 from texts.objects.cache.sqlite_ner_cache import SQLiteNERCacheData
 
 

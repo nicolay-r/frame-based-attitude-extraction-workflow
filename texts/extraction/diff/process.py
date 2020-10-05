@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from core.runtime.ref_opinon import RefOpinion
 from core.source.opinion import OpinionCollection, Opinion
-from texts.extraction.first.process import OpinionDependentTextProcessor
-from texts.extraction.second.process import FrameDependentTextProcessor
+from texts.extraction.pair_based.process import OpinionDependentTextProcessor
+from texts.extraction.frame_based.process import FrameDependentTextProcessor
 from texts.objects.collection import TextObjectsCollection
 from texts.printing.diffcontexts import DiffContextsPrinter
 from texts.printing.diffstat import DiffStatisticTitleOpinionsPrinter
