@@ -1,4 +1,4 @@
-from private.datasets.news_2017 import NewsReader2017Collection
+import importlib
 from scripts.args.base import BaseArg
 
 
@@ -10,7 +10,8 @@ class SourceNewsReaderArg(BaseArg):
     def read_argument(args):
         value = args.news_reader
         if value == SourceNewsReaderArg.Formatter2017:
-            return NewsReader2017Collection(messages_limit=None)
+            news_2017_module = importlib.import_module("private.datasets.news_2017")
+            return news_2017_module.NewsReader2017Collection(messages_limit=None)
 
     @staticmethod
     def add_argument(parser):
