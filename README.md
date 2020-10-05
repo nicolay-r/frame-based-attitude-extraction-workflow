@@ -8,8 +8,11 @@ It provides scripts for sentiment attitude extraction using frame-based method.
 
 ## Dependencies
 
+* python == 3.6
 * tqdm
 * sqlite3
+* AREkit == [0.19.5](https://github.com/nicolay-r/AREkit/tree/0.19.5-bdr-elsevier-2020-py3)
+    * Utilized as a core library for text parsing, frames reading, stemming application, etc.
 * ner == 0.0.2 
     * Optional, for `deep-ner` NER model
 * deep-pavlov == 1.11.0 
