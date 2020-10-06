@@ -1,7 +1,6 @@
 #!/usr/bin/python
 import collections
 from os import path
-
 from io_utils import create_dir
 from texts.extraction.pair_based import utils
 from texts.extraction.pair_based.process import OpinionDependentTextProcessor
@@ -10,8 +9,7 @@ from texts.printing.contexts import ContextsPrinter
 from texts.printing.statistics.base import OpinionStatisticBasePrinter
 
 
-def run_re_by_pairs(news_iter, pairs_list_filepath, out_dir, settings, start_with_text,
-                    parse_frames_in_news_sentences):
+def run_re_by_pairs(news_iter, pairs_list_filepath, out_dir, settings, parse_frames_in_news_sentences):
     assert(isinstance(news_iter, collections.Iterable))
     assert(isinstance(pairs_list_filepath, str))
     assert(isinstance(out_dir, str))
@@ -41,6 +39,6 @@ def run_re_by_pairs(news_iter, pairs_list_filepath, out_dir, settings, start_wit
 
     for text_index, news_info in news_iter:
         tp.process_news_and_print(news_info=news_info,
-                                  text_index=text_index - start_with_text)
+                                  text_index=text_index)
 
     statistic_printer.save(filepath=path.join(out_dir, "stat.txt"))

@@ -1,7 +1,6 @@
 #!/usr/bin/python
 import collections
 from os import path
-
 from io_utils import create_dir
 from texts.extraction.diff.process import DiffTextProcessor
 from texts.extraction.pair_based import utils
@@ -14,8 +13,7 @@ from texts.printing.diffstat import DiffStatisticTitleOpinionsPrinter
 from texts.printing.statistics.base import OpinionStatisticBasePrinter
 
 
-def run_re_diff(news_iter, pairs_list_filepath, out_dir, settings, start_with_text,
-                parse_frames_in_news_sentences):
+def run_re_diff(news_iter, pairs_list_filepath, out_dir, settings, parse_frames_in_news_sentences):
     assert(isinstance(news_iter, collections.Iterable))
     assert(isinstance(settings, Settings))
     assert(isinstance(pairs_list_filepath, str))
@@ -63,7 +61,7 @@ def run_re_diff(news_iter, pairs_list_filepath, out_dir, settings, start_with_te
 
     for text_index, news_info in news_iter:
         dtp.process_news(news_info=news_info,
-                         text_index=text_index - start_with_text)
+                         text_index=text_index)
 
     # Printing.
     diffstat_printer.print_statistic()

@@ -8,7 +8,7 @@ from texts.printing.contexts import ContextsPrinter
 from texts.printing.statistics.base import OpinionStatisticBasePrinter
 
 
-def run_re_by_frames(news_iter, out_dir, settings, start_with_text, parse_frames_in_news_sentences):
+def run_re_by_frames(news_iter, out_dir, settings, parse_frames_in_news_sentences):
     assert(isinstance(news_iter, collections.Iterable))
     assert(isinstance(out_dir, str))
     assert(isinstance(settings, Settings))
@@ -30,6 +30,6 @@ def run_re_by_frames(news_iter, out_dir, settings, start_with_text, parse_frames
 
     for text_index, news_info in news_iter:
         tp.process_news_and_print(news_info=news_info,
-                                  text_index=text_index - start_with_text)
+                                  text_index=text_index)
 
     statistic_printer.save(filepath=path.join(out_dir, "stat.txt"))

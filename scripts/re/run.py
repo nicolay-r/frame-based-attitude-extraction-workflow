@@ -1,8 +1,7 @@
 import os
 import sys
 import argparse
-from os import mkdir
-from os.path import join, basename, exists
+from os.path import join, basename
 
 sys.path.append('../../')
 
@@ -174,14 +173,12 @@ if __name__ == "__main__":
                                 out_dir=actual_out_dir,
                                 settings=settings,
                                 pairs_list_filepath=args.pairs_list_filepath,
-                                start_with_text=start_from_index,
                                 parse_frames_in_news_sentences=parse_frames_in_sents)
 
             if task == TASK_EXTRACTION_BY_FRAMES:
                 run_re_by_frames(news_iter=news_it,
                                  out_dir=actual_out_dir,
                                  settings=settings,
-                                 start_with_text=start_from_index,
                                  parse_frames_in_news_sentences=parse_frames_in_sents)
 
             elif task == TASK_DIFF_EXTRACTION:
@@ -189,5 +186,4 @@ if __name__ == "__main__":
                             out_dir=actual_out_dir,
                             settings=settings,
                             pairs_list_filepath=args.pairs_list_filepath,
-                            start_with_text=start_from_index,
                             parse_frames_in_news_sentences=parse_frames_in_sents)
