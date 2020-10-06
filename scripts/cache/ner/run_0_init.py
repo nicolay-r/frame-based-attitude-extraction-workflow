@@ -83,6 +83,7 @@ if __name__ == "__main__":
 
     run_ner_cache(reader=reader,
                   src_dir=src_dir,
+                  # TODO. Move this call to defaults.
                   ner=Settings.get_class_by_ner_name(ner_type)(),
                   stemmer=Default.create_default_stemmer(),
                   start_from_index=start_from_index)

@@ -47,7 +47,7 @@ class OpinionDependentTextProcessor(TextProcessor):
         processed_result = self.process_news_core(text_index=text_index,
                                                   news_info=news_info)
 
-        self.__debug_docs_parsed = text_index
+        self.__debug_docs_parsed += 1
         self.__debug_sentences_parsed += len(news_info)
 
         if processed_result is None:

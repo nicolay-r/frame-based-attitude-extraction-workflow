@@ -1,6 +1,8 @@
 #!/usr/bin/python
+import collections
 from os import path
-from texts.readers.base import BaseNewsReader
+
+from io_utils import create_dir
 from texts.extraction.pair_based import utils
 from texts.extraction.pair_based.process import OpinionDependentTextProcessor
 from texts.extraction.settings import Settings
@@ -8,19 +10,23 @@ from texts.printing.contexts import ContextsPrinter
 from texts.printing.statistics.base import OpinionStatisticBasePrinter
 
 
-def run_re_by_pairs(reader, pairs_list_filepath, src_dir, out_dir, settings, start_with_text,
+def run_re_by_pairs(news_iter, pairs_list_filepath, out_dir, settings, start_with_text,
                     parse_frames_in_news_sentences):
-    assert(isinstance(reader, BaseNewsReader))
+    assert(isinstance(news_iter, collections.Iterable))
     assert(isinstance(pairs_list_filepath, str))
-    assert(isinstance(src_dir, str))
     assert(isinstance(out_dir, str))
     assert(isinstance(settings, Settings))
     assert(isinstance(parse_frames_in_news_sentences, bool))
 
+    create_dir(out_dir)
+
     # TODO. Refactor this.
-    # TODO. Update reading.
-    opinions = utils.read_opinions(filepath=pairs_list_filepath,
-                                   synonyms=settings.Synonyms)
+    with open(pairs_list_filepath, 'r') as f:
+        opinions = utils.read_opinions(
+            filepath=pairs_list_filepath,
+            custom_opin_ends_iter=lambda use_sentiment:
+            OpinionStatisticBasePrinter.iter_opinion_end_values(f=f, read_sentiment=True),
+            synonyms=settings.Synonyms)
 
     statistic_printer = OpinionStatisticBasePrinter(synonyms=settings.Synonyms)
 
@@ -33,11 +39,7 @@ def run_re_by_pairs(reader, pairs_list_filepath, src_dir, out_dir, settings, sta
                                        parse_frames_in_news_sentences=parse_frames_in_news_sentences,
                                        expected_opinions=opinions)
 
-    news_it = reader.get_news_iter(src_dir,
-                                   desc="Pair-based processor",
-                                   start_with_index=start_with_text)
-
-    for text_index, news_info in news_it:
+    for text_index, news_info in news_iter:
         tp.process_news_and_print(news_info=news_info,
                                   text_index=text_index - start_with_text)
 

@@ -1,18 +1,20 @@
 #!/usr/bin/python
+import collections
 from os import path
-
-from texts.readers.base import BaseNewsReader
+from io_utils import create_dir
 from texts.extraction.frame_based.process import FrameDependentTextProcessor
 from texts.extraction.settings import Settings
 from texts.printing.contexts import ContextsPrinter
 from texts.printing.statistics.base import OpinionStatisticBasePrinter
 
 
-def run_re_by_frames(reader, out_dir, src_dir, settings, start_with_text, parse_frames_in_news_sentences):
-    assert(isinstance(reader, BaseNewsReader))
+def run_re_by_frames(news_iter, out_dir, settings, start_with_text, parse_frames_in_news_sentences):
+    assert(isinstance(news_iter, collections.Iterable))
     assert(isinstance(out_dir, str))
     assert(isinstance(settings, Settings))
     assert(isinstance(parse_frames_in_news_sentences, bool))
+
+    create_dir(out_dir)
 
     statistic_printer = OpinionStatisticBasePrinter(synonyms=settings.Synonyms,
                                                     display_pn_stat=True)
@@ -26,11 +28,7 @@ def run_re_by_frames(reader, out_dir, src_dir, settings, start_with_text, parse_
                                      parse_frames_in_news_sentences=parse_frames_in_news_sentences,
                                      flag_process_only_titles=True)
 
-    news_it = reader.get_news_iter(src_dir,
-                                   desc="FrameBased processor",
-                                   start_with_index=start_with_text)
-
-    for text_index, news_info in news_it:
+    for text_index, news_info in news_iter:
         tp.process_news_and_print(news_info=news_info,
                                   text_index=text_index - start_with_text)
 

@@ -88,7 +88,6 @@ if __name__ == "__main__":
     parser.add_argument('--diff-pairs-list',
                         dest='pairs_list_filepath',
                         nargs='?',
-                        # default=join(io_utils.get_relation_root(), 'ruattitudes_v10_pairs_list.txt'),
                         help="[<{tasks}> only] Pairs list filepath".format(
                             tasks=",".join([TASK_DIFF_EXTRACTION, TASK_EXTRACTION_BY_PAIRS])))
 
@@ -164,17 +163,14 @@ if __name__ == "__main__":
         else get_output_root_task_new_part_folder(out_dir=out_dir,
                                                   task_name=task_name)
 
-    if not exists(actual_out_dir):
-        mkdir(actual_out_dir)
-
-    print("Output dir:", actual_out_dir)
-
     with ner_cache:
         with frames_cache:
 
+            print("Output dir:", actual_out_dir)
+            news_it = reader.get_news_iter(src_dir, start_with_index=start_from_index)
+
             if task == TASK_EXTRACTION_BY_PAIRS:
-                run_re_by_pairs(reader=reader,
-                                src_dir=src_dir,
+                run_re_by_pairs(news_iter=news_it,
                                 out_dir=actual_out_dir,
                                 settings=settings,
                                 pairs_list_filepath=args.pairs_list_filepath,
@@ -182,16 +178,14 @@ if __name__ == "__main__":
                                 parse_frames_in_news_sentences=parse_frames_in_sents)
 
             if task == TASK_EXTRACTION_BY_FRAMES:
-                run_re_by_frames(reader=reader,
+                run_re_by_frames(news_iter=news_it,
                                  out_dir=actual_out_dir,
-                                 src_dir=src_dir,
                                  settings=settings,
                                  start_with_text=start_from_index,
                                  parse_frames_in_news_sentences=parse_frames_in_sents)
 
             elif task == TASK_DIFF_EXTRACTION:
-                run_re_diff(reader=reader,
-                            src_dir=src_dir,
+                run_re_diff(news_iter=news_it,
                             out_dir=actual_out_dir,
                             settings=settings,
                             pairs_list_filepath=args.pairs_list_filepath,

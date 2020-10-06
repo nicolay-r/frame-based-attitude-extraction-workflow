@@ -22,12 +22,12 @@ class ContextsPrinter:
         self.__prefix = prefix
         self.__out = None
         self.__opins_per_file = opins_per_file
-        self.__last_text_index = -1
+        self.__last_text_index_written = -1
 
     def print_news_title(self, title_descriptor):
         assert(isinstance(title_descriptor, TitleDescriptor))
 
-        if title_descriptor.text_index == self.__last_text_index:
+        if title_descriptor.text_index == self.__last_text_index_written:
             return
 
         if self.__out is None:
@@ -40,7 +40,7 @@ class ContextsPrinter:
             self.__opinions_written += 1
 
         self.__print_extracted_title(title_descriptor)
-        self.__last_text_index = title_descriptor.text_index
+        self.__last_text_index_written = title_descriptor.text_index
 
     def __open_file(self):
         return open(join(self.__dir, "{}_{}.txt".format(self.__prefix,
