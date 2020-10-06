@@ -31,7 +31,7 @@ class NewsInfo:
             yield p
 
     def __len__(self):
-        return len(self.__sentences)
+        return len(self.__sentences) + 1 if self.__title is not None else 0
 
 
 def iter_text_by_nonempty_sentences(original_text):
