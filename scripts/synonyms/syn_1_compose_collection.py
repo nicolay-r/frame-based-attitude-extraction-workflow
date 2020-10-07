@@ -5,10 +5,10 @@ from tqdm import tqdm
 
 sys.path.append('../../')
 
+from io_utils import create_dir
 from scripts.args.out_dir import OptionalOutputDirArg
 from scripts.synonyms.syn_0_extract_obj_values import \
     get_obj_values_subfolder, \
-    WORD_FILENAME_PREFIX, \
     WORD_TYPE_SEPARATOR
 
 from texts.readers.tools.utils import get_all_subfiles
@@ -58,6 +58,8 @@ if __name__ == "__main__":
     output_dir = OptionalOutputDirArg.read_argument(args)
     values_dir = get_obj_values_subfolder(output_dir=source_dir)
 
+    print(values_dir)
+
     # Initialize necessary instances for words grouping.
     stemmer = Default.create_default_stemmer()
     ruthes_nouns = RussianThesaurusSynsets.from_xml_file(filepath=args.ruthes_filepath[0])
@@ -68,8 +70,9 @@ if __name__ == "__main__":
 
     # Processsing all the files in subdir.
     f_names_it = get_all_subfiles(data_folder=values_dir,
-                                  f_name_check_rule=lambda f_name: WORD_FILENAME_PREFIX in f_name)
+                                  f_name_check_rule=lambda _: True)
     for filename in f_names_it:
+        print(filename)
         for obj_value, obj_type in iter_words_with_types_from_filepath(filename):
 
             lemma_value = stemmer.lemmatize_to_str(obj_value)
@@ -91,6 +94,8 @@ if __name__ == "__main__":
                 syn_groups[group_value] = d_s
 
             syn_groups[group_value].add(lemma_value)
+
+    create_dir(output_dir)
 
     # Saving the result synonyms collection in cache dir.
     group_keys = syn_groups.keys()
