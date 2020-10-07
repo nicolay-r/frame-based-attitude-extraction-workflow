@@ -1,12 +1,11 @@
 import sys
-
-from scripts.args.src_news_reader import SourceNewsReaderArg
-
-sys.path.append('../../')
-
 import argparse
 from os import mkdir
 from os.path import join, exists
+
+sys.path.append('../../')
+
+from scripts.args.src_news_reader import SourceNewsReaderArg
 from scripts.args.ner_cache import NerCacheFilepathArg
 from scripts.args.ner_type import NerTypeArg
 from scripts.args.src_news_dir import NewsSourceDirArg

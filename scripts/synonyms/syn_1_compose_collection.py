@@ -1,10 +1,9 @@
 import sys
-
-sys.path.append('../../')
-
 import argparse
 from os.path import join
 from tqdm import tqdm
+
+sys.path.append('../../')
 
 from scripts.args.out_dir import OptionalOutputDirArg
 from scripts.synonyms.syn_0_extract_obj_values import \
