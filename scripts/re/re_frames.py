@@ -17,17 +17,16 @@ def run_re_by_frames(news_iter, out_dir, settings, parse_frames_in_news_sentence
 
     create_dir(out_dir)
 
-    statistic_printer = OpinionStatisticBasePrinter(synonyms=settings.Synonyms,
-                                                    display_pn_stat=True)
-
-    contexts_printer = ContextsPrinter(dir=out_dir,
-                                       prefix="news_er_")
+    # Init printers.
+    statistic_printer = OpinionStatisticBasePrinter(synonyms=settings.Synonyms, display_pn_stat=True)
+    contexts_printer = ContextsPrinter(dir=out_dir, prefix="news_er_")
+    stat_objs_printer = StatisticObjectsPrinter(path.join(out_dir, "objs_stat.txt"))
 
     tp = FrameDependentTextProcessor(
         settings=settings,
         contexts_printer=contexts_printer,
         opinion_statistic_printer=statistic_printer,
-        object_statistic_printer=StatisticObjectsPrinter(path.join(out_dir, "objs_stat.txt")),
+        object_statistic_printer=stat_objs_printer,
         parse_frames_in_news_sentences=parse_frames_in_news_sentences,
         flag_process_only_titles=True)
 
@@ -36,3 +35,4 @@ def run_re_by_frames(news_iter, out_dir, settings, parse_frames_in_news_sentence
                                   text_index=text_index)
 
     statistic_printer.save(filepath=path.join(out_dir, "stat.txt"))
+    stat_objs_printer.save()

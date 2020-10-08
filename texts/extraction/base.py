@@ -136,10 +136,6 @@ class TextProcessor(object):
         # Separator
         self.OpinionStatisticPrinter.add_extra_separator()
 
-    def update_object_statistic(self):
-        if self.__object_statistic_printer is not None:
-            self.__object_statistic_printer.save()
-
     def process_news_core(self, text_index, news_info):
         raise Exception("Not implemented")
 

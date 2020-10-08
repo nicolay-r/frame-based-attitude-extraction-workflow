@@ -11,6 +11,7 @@ from texts.printing.contexts import ContextsPrinter
 from texts.printing.diffcontexts import DiffContextsPrinter
 from texts.printing.diffstat import DiffStatisticTitleOpinionsPrinter
 from texts.printing.statistics.base import OpinionStatisticBasePrinter
+from texts.printing.statistics.objects import StatisticObjectsPrinter
 
 
 def run_re_diff(news_iter, pairs_list_filepath, out_dir, settings, parse_frames_in_news_sentences):
@@ -30,23 +31,23 @@ def run_re_diff(news_iter, pairs_list_filepath, out_dir, settings, parse_frames_
                 OpinionStatisticBasePrinter.iter_opinion_end_values(f=f, read_sentiment=True),
             synonyms=settings.Synonyms)
 
+    # Init printers
     statistic_printer = OpinionStatisticBasePrinter(synonyms=settings.Synonyms)
-
-    contexts_printer = ContextsPrinter(dir=out_dir,
-                                       prefix="diffstat_er_")
-
+    contexts_printer = ContextsPrinter(dir=out_dir, prefix="diffstat_er_")
     diffstat_printer = DiffStatisticTitleOpinionsPrinter(filepath=path.join(out_dir, "diffstat.txt"),
                                                          opinions=opinions,
                                                          synonyms=settings.Synonyms)
-
     diffctx_printer = DiffContextsPrinter(directory=out_dir, filename="diff.txt")
     samectx_printer = DiffContextsPrinter(directory=out_dir, filename="same.txt")
+    stat_objs_printer = StatisticObjectsPrinter(path.join(out_dir, "objs_stat.txt"))
 
-    otp = OpinionDependentTextProcessor(settings=settings,
-                                        contexts_printer=contexts_printer,
-                                        opinion_statistic_printer=statistic_printer,
-                                        expected_opinions=opinions,
-                                        parse_frames_in_news_sentences=parse_frames_in_news_sentences)
+    otp = OpinionDependentTextProcessor(
+        settings=settings,
+        contexts_printer=contexts_printer,
+        opinion_statistic_printer=statistic_printer,
+        expected_opinions=opinions,
+        object_statistic_printer=stat_objs_printer,
+        parse_frames_in_news_sentences=parse_frames_in_news_sentences)
 
     ftp = FrameDependentTextProcessor(settings=settings,
                                       contexts_printer=contexts_printer,
@@ -66,3 +67,4 @@ def run_re_diff(news_iter, pairs_list_filepath, out_dir, settings, parse_frames_
     # Printing.
     diffstat_printer.print_statistic()
     statistic_printer.save(filepath=path.join(out_dir, "nonused.txt"))
+    stat_objs_printer.save()

@@ -80,7 +80,6 @@ class FrameDependentTextProcessor(TextProcessor):
         self.print_contexts(title_descriptor=td,
                             context_descriptors=[] if self.__process_only_titles else cds)
         self.update_opinions_statistics(title_opinions if self.__process_only_titles else text_opinions)
-        self.update_object_statistic()
 
     def process_news_core(self, text_index, news_info):
         assert(isinstance(text_index, int))
