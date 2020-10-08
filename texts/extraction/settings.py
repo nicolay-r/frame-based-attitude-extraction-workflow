@@ -2,13 +2,8 @@ from collections import OrderedDict
 
 from core.helpers.frames import FramesHelper
 from core.processing.pos.mystem_wrap import POSMystemWrapper
-
 from texts.ner_wraps import supported
 from texts.extraction.default import Default
-
-from texts.extraction.frame_based.limits import NerTypesLimitation
-from texts.ner_wraps.deep_ner import LocalDeepNERWrap
-from texts.ner_wraps.deepavlov_bert_ner import DeepPavlovBertNERWrap
 from texts.objects.authorized.collection import AuthorizedObjectsCollection
 from texts.objects.cache.base import BaseObjectCache
 
@@ -36,7 +31,6 @@ class Settings(object):
         self.__stemmer = None
         self.__frame_variants = None
         self.__frames = None
-        self.__lexicon = None  # Lexicon.from_csv(join(io_utils.get_data_root(), "rusentilex.csv"))
         self.__pos_tagger = None
         self.__syntax = None
         self.__use_auth_list = False
@@ -44,8 +38,7 @@ class Settings(object):
 
         # NER
         self.__ner_cache = None
-        self.__ner_class_type = self.get_class_by_ner_name(ner_name)
-        self.__ner_types_limitation = NerTypesLimitation(ner_type=self.__ner_class_type)
+        self.__ner_class_type = Default.get_class_by_ner_name(ner_name)
         self.__ner = None
 
         if init_stemmer:
@@ -108,10 +101,6 @@ class Settings(object):
         return self.__pos_tagger
 
     @property
-    def Lexicon(self):
-        return self.__lexicon
-
-    @property
     def Frames(self):
         return self.__frames
 
@@ -142,26 +131,5 @@ class Settings(object):
     def set_frames_cache(self, frames_cache):
         assert(isinstance(frames_cache, BaseObjectCache))
         self.__frames_cache = frames_cache
-
-    def default_authorization_check(self, auth_obj):
-        assert(isinstance(self.AuthorizedObjects, AuthorizedObjectsCollection))
-
-        if auth_obj is None:
-            return False
-
-        if not self.__use_auth_list:
-            return self.__ner_types_limitation.is_valid_obj(auth_obj)
-
-        return self.AuthorizedObjects.has_value(auth_obj.get_value())
-
-    @staticmethod
-    def get_class_by_ner_name(ner_name):
-        assert(isinstance(ner_name, str))
-        if ner_name == supported.ONTONOTES_BERT_MULT_NAME:
-            return DeepPavlovBertNERWrap
-        elif ner_name == supported.DEEP_NER_NAME:
-            return LocalDeepNERWrap
-        else:
-            raise Exception("NER type '{}' is not supported".format(ner_name))
 
     # endregion

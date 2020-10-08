@@ -11,8 +11,7 @@ from scripts.args.news import NewsStartFromIndexArg
 from scripts.args.src_news_dir import NewsSourceDirArg
 from scripts.args.src_news_reader import SourceNewsReaderArg
 from texts.extraction.default import Default
-from texts.extraction.settings import Settings
-from texts.extraction.frame_based.limits import NerTypesLimitation
+from texts.extraction.frame_based.obj_auth import TextObjectAuthorizer
 from texts.objects.cache.sqlite_ner_cache import SQLiteNERCacheData
 
 
@@ -46,7 +45,7 @@ def run_ner_cache(reader, src_dir, ner, stemmer, start_from_index):
                                            folder=src_dir,
                                            ner=ner)
 
-    limitation = NerTypesLimitation(type(ner))
+    limitation = TextObjectAuthorizer(type(ner))
 
     with cache:
         for news_index, news_info in reader.get_news_iter(src_dir):
@@ -83,7 +82,6 @@ if __name__ == "__main__":
 
     run_ner_cache(reader=reader,
                   src_dir=src_dir,
-                  # TODO. Move this call to defaults.
-                  ner=Settings.get_class_by_ner_name(ner_type)(),
+                  ner=Default.get_class_by_ner_name(ner_type)(),
                   stemmer=Default.create_default_stemmer(),
                   start_from_index=start_from_index)

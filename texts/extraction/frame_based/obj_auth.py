@@ -1,7 +1,7 @@
 from texts.objects.authorized.object import AuthTextObject
 
 
-class NerTypesLimitation:
+class TextObjectAuthorizer:
 
     def __init__(self, ner_type):
         l = [ner_type.get_person_type_str(),
@@ -16,6 +16,10 @@ class NerTypesLimitation:
     def SupportedNerTypesSet(self):
         return self.__supported_ner_types
 
-    def is_valid_obj(self, obj):
-        assert(isinstance(obj, AuthTextObject))
+    def is_auth(self, obj):
+        assert(isinstance(obj, AuthTextObject) or obj is None)
+
+        if obj is None:
+            return False
+
         return obj.Type in self.__supported_ner_types

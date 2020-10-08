@@ -4,6 +4,7 @@ from core.runtime.ref_opinon import RefOpinion
 from core.source.opinion import OpinionCollection, Opinion
 from core.source.synonyms import SynonymsCollection
 from texts.extraction.default import Default
+from texts.extraction.frame_based.obj_auth import TextObjectAuthorizer
 from texts.extraction.text_parser.base import process_sentence_core_static
 from texts.extraction.settings import Settings
 from texts.frames import TextFrameVariantsCollection
@@ -47,10 +48,12 @@ class TextProcessor(object):
         self.__parse_frames_in_news_sentences = parse_frames_in_news_sentences
         self.__check_obj_preposition_in_title = True
 
+        self.__text_object_authorizer = TextObjectAuthorizer(ner_type=settings.NERClassType)
+
         self.__ner_extractor = Default.create_ner_extractor(
             ner=settings.NER,
             ner_cache=settings.NerCache,
-            default_auth_check=settings.default_authorization_check)
+            default_auth_check=lambda text_obj: self.__text_object_authorizer.is_auth(text_obj))
 
         self.__debug_opinions_created = 0
         self.__debug_opinions_with_missed_synonyms = 0

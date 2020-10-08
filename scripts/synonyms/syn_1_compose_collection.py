@@ -7,10 +7,7 @@ sys.path.append('../../')
 
 from io_utils import create_dir
 from scripts.args.out_dir import OptionalOutputDirArg
-from scripts.synonyms.syn_0_extract_obj_values import \
-    get_obj_values_subfolder, \
-    WORD_TYPE_SEPARATOR
-
+from scripts.synonyms.syn_0_extract_obj_values import WORD_TYPE_SEPARATOR
 from texts.readers.tools.utils import get_all_subfiles
 from texts.extraction.default import Default
 from texts.objects.synonyms.ru_thes_synsets import RussianThesaurusSynsets
@@ -56,9 +53,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     source_dir = args.obj_values_dir[0]
     output_dir = OptionalOutputDirArg.read_argument(args)
-    values_dir = get_obj_values_subfolder(output_dir=source_dir)
-
-    print(values_dir)
 
     # Initialize necessary instances for words grouping.
     stemmer = Default.create_default_stemmer()
@@ -69,7 +63,7 @@ if __name__ == "__main__":
     syn_groups = {}
 
     # Processsing all the files in subdir.
-    f_names_it = get_all_subfiles(data_folder=values_dir,
+    f_names_it = get_all_subfiles(data_folder=source_dir,
                                   f_name_check_rule=lambda _: True)
     for filename in f_names_it:
         print(filename)

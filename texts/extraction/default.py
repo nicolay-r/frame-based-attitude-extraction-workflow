@@ -3,6 +3,10 @@ from core.processing.lemmatization.mystem import MystemWrapper
 from core.source.frames.complete import FramesCollection
 from core.source.frames.variants import FrameVariantsCollection
 from core.source.synonyms import SynonymsCollection
+from texts.extraction.frame_based.obj_auth import TextObjectAuthorizer
+from texts.ner_wraps import supported
+from texts.ner_wraps.deep_ner import LocalDeepNERWrap
+from texts.ner_wraps.deepavlov_bert_ner import DeepPavlovBertNERWrap
 from texts.objects.extraction.extractor import NerExtractor
 
 
@@ -38,3 +42,17 @@ class Default:
             ner_cache=ner_cache,
             fix_obj_value=True,
             auth_objs_check_func=default_auth_check)
+
+    @staticmethod
+    def create_obj_authorizer(ner_class_type):
+        return TextObjectAuthorizer(ner_type=ner_class_type)
+
+    @staticmethod
+    def get_class_by_ner_name(ner_name):
+        assert(isinstance(ner_name, str))
+        if ner_name == supported.ONTONOTES_BERT_MULT_NAME:
+            return DeepPavlovBertNERWrap
+        elif ner_name == supported.DEEP_NER_NAME:
+            return LocalDeepNERWrap
+        else:
+            raise Exception("NER type '{}' is not supported".format(ner_name))

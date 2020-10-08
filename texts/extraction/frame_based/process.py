@@ -2,7 +2,7 @@
 from core.evaluation.labels import Label
 from texts.readers.utils import NewsInfo
 from texts.extraction.base import TextProcessor
-from texts.extraction.frame_based.limits import NerTypesLimitation
+from texts.extraction.frame_based.obj_auth import TextObjectAuthorizer
 from texts.extraction.frame_based.utils import get_frames_polarities, mean
 from texts.frames import TextFrameVariantsCollection
 from texts.printing.utils import TitleDescriptor
@@ -54,7 +54,7 @@ class FrameDependentTextProcessor(TextProcessor):
 
         self.__debug_valid = 0
         self.__process_only_titles = flag_process_only_titles
-        self.__ner_types_limitation = NerTypesLimitation(settings.NERClassType)
+        self.__ner_types_limitation = TextObjectAuthorizer(settings.NERClassType)
 
     # region public methods
 
