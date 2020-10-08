@@ -156,9 +156,12 @@ class TextProcessor(object):
         for index, sentence in enumerate(sentences):
             assert(isinstance(sentence, str))
 
-            parsed_sentence, s_objects, s_frames, s_opinion_refs, s_opinions_list = self.__process_sentence(
+            _, parsed_sentence, s_objects, s_frames = self._process_sentence_core(
                 sentence_text=sentence,
-                news_sentence_info=NewsSentenceInfo(news_id=news_id, sent_id=index),
+                news_sentence_info=NewsSentenceInfo(news_id=news_id, sent_id=index))
+
+            s_opinion_refs, s_opinions_list = self.__extract_sentence_opinion_refs(
+                text_objects_collection=s_objects,
                 title_opinions=title_opinions,
                 synonyms=synonyms)
 
@@ -281,37 +284,39 @@ class TextProcessor(object):
 
         return True
 
-    def __process_sentence(self, sentence_text, news_sentence_info, title_opinions, synonyms):
+    def _process_sentence_core(self, sentence_text, news_sentence_info):
+        """
+        The main sentence processor, where sentence considered to be a news titile or
+        a part of its contents.
+        """
         assert(isinstance(sentence_text, str))
         assert(isinstance(news_sentence_info, NewsSentenceInfo))
-        assert(isinstance(title_opinions, OpinionCollection))
-        assert(isinstance(synonyms, SynonymsCollection))
 
+        # parse text
         sentence_terms, parsed_sentence = to_input_terms(text=sentence_text,
                                                          stemmer=self.Settings.Stemmer,
                                                          lemmatized_terms=self._need_whole_text_lemmatization(),
                                                          ner=self.Settings.NER)
 
-        if self.__parse_frames_in_news_sentences:
-            s_frames = self._get_sentence_frames(lemmas=sentence_terms,
-                                                 news_sentence_info=news_sentence_info)
-        else:
-            s_frames = TextFrameVariantsCollection.create_empty()
-
+        # parse ner
         auth_text_objects = self._NerExtractor.extract(
             terms_list=sentence_terms,
             text_info=news_sentence_info,
-            iter_lemmas_in_range=lambda terms_range: parsed_sentence.iter_lemmas(terms_range=terms_range,
-                                                                                 need_cache=False),
+            iter_lemmas_in_range=lambda terms_range: parsed_sentence.iter_lemmas(
+                terms_range=terms_range,
+                need_cache=False),
             is_term_func=lambda t_ind: parsed_sentence.is_term(t_ind))
 
         objects = TextObjectsCollection(auth_text_objects)
 
-        opinion_refs, s_opinion_list = self.__extract_sentence_opinion_refs(text_objects_collection=objects,
-                                                                            title_opinions=title_opinions,
-                                                                            synonyms=synonyms)
+        # parse frames
+        if self.__parse_frames_in_news_sentences:
+            s_frames = self.__get_sentence_frames(lemmas=sentence_terms,
+                                                  news_sentence_info=news_sentence_info)
+        else:
+            s_frames = TextFrameVariantsCollection.create_empty()
 
-        return parsed_sentence, objects, s_frames, opinion_refs, s_opinion_list
+        return sentence_terms, parsed_sentence, objects, s_frames
 
     @staticmethod
     def __check_auth_correctness(i, j, objects):
@@ -401,7 +406,7 @@ class TextProcessor(object):
 
             obj.set_tag(tag)
 
-    def _get_sentence_frames(self, lemmas, news_sentence_info):
+    def __get_sentence_frames(self, lemmas, news_sentence_info):
         assert(isinstance(news_sentence_info, NewsSentenceInfo))
 
         if self._using_frames_cache():

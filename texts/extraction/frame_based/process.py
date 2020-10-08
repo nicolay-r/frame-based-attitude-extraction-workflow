@@ -89,9 +89,12 @@ class FrameDependentTextProcessor(TextProcessor):
         if len(news_info) == 0:
             return None
 
-        parsed_title, title_objects, title_frames, title_terms = self.__process_title(
-            news_id=self._get_news_id_by_news_info(news_info),
-            title=news_info.Title)
+        news_id = self._get_news_id_by_news_info(news_info)
+        news_sentence_info = NewsSentenceInfo.create_for_title(news_id=news_id)
+
+        title_terms, parsed_title, title_objects, title_frames = self._process_sentence_core(
+            sentence_text=news_info.Title,
+            news_sentence_info=news_sentence_info)
 
         if len(title_frames) == 0:
             return None
@@ -219,30 +222,6 @@ class FrameDependentTextProcessor(TextProcessor):
     # endregion
 
     # region private methods
-
-    def __process_title(self, news_id, title):
-        assert(isinstance(news_id, str))
-        assert(isinstance(title, str))
-
-        title_terms, parsed_title = to_input_terms(
-            text=title,
-            stemmer=self.Settings.Stemmer,
-            lemmatized_terms=self._need_whole_text_lemmatization(),
-            ner=self.Settings.NER)
-
-        title_frames = self._get_sentence_frames(lemmas=title_terms,
-                                                 news_sentence_info=NewsSentenceInfo.create_for_title(news_id))
-
-        text_objects = self._NerExtractor.extract(
-            terms_list=title_terms,
-            text_info=NewsSentenceInfo.create_for_title(news_id=news_id),
-            iter_lemmas_in_range=lambda terms_range: parsed_title.iter_lemmas(terms_range=terms_range,
-                                                                              need_cache=False),
-            is_term_func=lambda t_ind: parsed_title.is_term(t_ind))
-
-        title_objects = TextObjectsCollection(text_objects)
-
-        return parsed_title, title_objects, title_frames, title_terms
 
     @staticmethod
     def __get_frames_within(left_in, right_in, text_frame_variants):

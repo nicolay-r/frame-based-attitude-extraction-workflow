@@ -68,22 +68,13 @@ class OpinionDependentTextProcessor(TextProcessor):
         if len(news_info) == 0:
             return None
 
-        # process title.
-        title_terms, parsed_title = to_input_terms(text=news_info.Title,
-                                                   stemmer=self.Settings.Stemmer,
-                                                   lemmatized_terms=False,
-                                                   ner=self.Settings.NER)
+        news_sentence_info = NewsSentenceInfo.create_for_title(
+            news_id=self._get_news_id_by_news_info(news_info))
 
-        auth_text_objects = self._NerExtractor.extract(
-            terms_list=title_terms,
-            text_info=NewsSentenceInfo.create_for_title(news_id=self._get_news_id_by_news_info(news_info)),
-            iter_lemmas_in_range=lambda terms_range: parsed_title.iter_lemmas(terms_range=terms_range,
-                                                                              need_cache=False),
-            is_term_func=lambda t_ind: parsed_title.is_term(t_ind))
+        title_terms, parsed_title, title_objects, title_frames = self._process_sentence_core(
+            sentence_text=news_info.Title,
+            news_sentence_info=news_sentence_info)
 
-        title_objects = TextObjectsCollection(auth_text_objects)
-
-        title_frames = TextFrameVariantsCollection.create_empty()
         title_opinion_refs, title_opinions = self._extract_opinions_from_title(title_terms=title_terms,
                                                                                title_objects=title_objects,
                                                                                title_frames=title_frames,
