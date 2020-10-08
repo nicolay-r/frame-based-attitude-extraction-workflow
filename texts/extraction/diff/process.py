@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 from core.runtime.ref_opinon import RefOpinion
 from core.source.opinion import OpinionCollection, Opinion
-from texts.extraction.pair_based.process import OpinionDependentTextProcessor
-from texts.extraction.frame_based.process import FrameDependentTextProcessor
+from texts.extraction.pair_based.process import PairBasedTextProcessor
+from texts.extraction.frame_based.process import FrameBasedTextProcessor
 from texts.objects.collection import TextObjectsCollection
 from texts.printing.diffcontexts import DiffContextsPrinter
 from texts.printing.diffstat import DiffStatisticTitleOpinionsPrinter
 from texts.printing.utils import ContextDescriptor
 
 
-class DiffTextProcessor:
+class OpinionFilteredTextProcessor:
 
     __bool_list = [True, False]
 
@@ -19,8 +19,8 @@ class DiffTextProcessor:
                  diff_stat,
                  diff_ctx,
                  same_ctx):
-        assert(isinstance(opinion_dependent_processor, OpinionDependentTextProcessor))
-        assert(isinstance(frame_dependent_processor, FrameDependentTextProcessor))
+        assert(isinstance(opinion_dependent_processor, PairBasedTextProcessor))
+        assert(isinstance(frame_dependent_processor, FrameBasedTextProcessor))
         assert(isinstance(diff_stat, DiffStatisticTitleOpinionsPrinter))
         assert(isinstance(diff_ctx, DiffContextsPrinter))
         assert(isinstance(same_ctx, DiffContextsPrinter))

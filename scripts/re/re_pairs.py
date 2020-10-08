@@ -3,7 +3,7 @@ import collections
 from os import path
 from io_utils import create_dir
 from texts.extraction.pair_based import utils
-from texts.extraction.pair_based.process import OpinionDependentTextProcessor
+from texts.extraction.pair_based.process import PairBasedTextProcessor
 from texts.extraction.settings import Settings
 from texts.printing.contexts import ContextsPrinter
 from texts.printing.statistics.base import OpinionStatisticBasePrinter
@@ -31,14 +31,14 @@ def run_re_by_pairs(news_iter, pairs_list_filepath, out_dir, settings, parse_fra
     contexts_printer = ContextsPrinter(dir=out_dir,
                                        prefix="news_er_")
 
-    tp = OpinionDependentTextProcessor(settings=settings,
-                                       contexts_printer=contexts_printer,
-                                       opinion_statistic_printer=statistic_printer,
-                                       parse_frames_in_news_sentences=parse_frames_in_news_sentences,
-                                       expected_opinions=opinions)
+    pair_based = PairBasedTextProcessor(settings=settings,
+                                        contexts_printer=contexts_printer,
+                                        opinion_statistic_printer=statistic_printer,
+                                        parse_frames_in_news_sentences=parse_frames_in_news_sentences,
+                                        expected_opinions=opinions)
 
     for text_index, news_info in news_iter:
-        tp.process_news_and_print(news_info=news_info,
-                                  text_index=text_index)
+        pair_based.process_news_and_print(news_info=news_info,
+                                          text_index=text_index)
 
     statistic_printer.save(filepath=path.join(out_dir, "stat.txt"))

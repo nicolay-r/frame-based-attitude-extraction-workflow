@@ -2,10 +2,10 @@
 import collections
 from os import path
 from io_utils import create_dir
-from texts.extraction.diff.process import DiffTextProcessor
+from texts.extraction.diff.process import OpinionFilteredTextProcessor
 from texts.extraction.pair_based import utils
-from texts.extraction.pair_based.process import OpinionDependentTextProcessor
-from texts.extraction.frame_based.process import FrameDependentTextProcessor
+from texts.extraction.pair_based.process import PairBasedTextProcessor
+from texts.extraction.frame_based.process import FrameBasedTextProcessor
 from texts.extraction.settings import Settings
 from texts.printing.contexts import ContextsPrinter
 from texts.printing.diffcontexts import DiffContextsPrinter
@@ -41,7 +41,7 @@ def run_re_diff(news_iter, pairs_list_filepath, out_dir, settings, parse_frames_
     samectx_printer = DiffContextsPrinter(directory=out_dir, filename="same.txt")
     stat_objs_printer = StatisticObjectsPrinter(path.join(out_dir, "objs_stat.txt"))
 
-    otp = OpinionDependentTextProcessor(
+    pair_based = PairBasedTextProcessor(
         settings=settings,
         contexts_printer=contexts_printer,
         opinion_statistic_printer=statistic_printer,
@@ -49,20 +49,20 @@ def run_re_diff(news_iter, pairs_list_filepath, out_dir, settings, parse_frames_
         object_statistic_printer=stat_objs_printer,
         parse_frames_in_news_sentences=parse_frames_in_news_sentences)
 
-    ftp = FrameDependentTextProcessor(settings=settings,
-                                      contexts_printer=contexts_printer,
-                                      opinion_statistic_printer=statistic_printer,
-                                      parse_frames_in_news_sentences=parse_frames_in_news_sentences)
+    frame_based = FrameBasedTextProcessor(settings=settings,
+                                          contexts_printer=contexts_printer,
+                                          opinion_statistic_printer=statistic_printer,
+                                          parse_frames_in_news_sentences=parse_frames_in_news_sentences)
 
-    dtp = DiffTextProcessor(opinion_dependent_processor=otp,
-                            frame_dependent_processor=ftp,
-                            diff_stat=diffstat_printer,
-                            diff_ctx=diffctx_printer,
-                            same_ctx=samectx_printer)
+    opinion_filtered = OpinionFilteredTextProcessor(opinion_dependent_processor=pair_based,
+                                                    frame_dependent_processor=frame_based,
+                                                    diff_stat=diffstat_printer,
+                                                    diff_ctx=diffctx_printer,
+                                                    same_ctx=samectx_printer)
 
     for text_index, news_info in news_iter:
-        dtp.process_news(news_info=news_info,
-                         text_index=text_index)
+        opinion_filtered.process_news(news_info=news_info,
+                                      text_index=text_index)
 
     # Printing.
     diffstat_printer.print_statistic()

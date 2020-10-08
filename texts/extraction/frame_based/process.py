@@ -9,7 +9,7 @@ from texts.printing.utils import TitleDescriptor
 from texts.utils import optional_invert_label
 
 
-class FrameDependentTextProcessor(TextProcessor):
+class FrameBasedTextProcessor(TextProcessor):
 
     pref = "[FrameProcessor]: "
 
@@ -38,7 +38,7 @@ class FrameDependentTextProcessor(TextProcessor):
                  flag_process_only_titles=False):
         assert(isinstance(flag_process_only_titles, bool))
 
-        super(FrameDependentTextProcessor, self).__init__(
+        super(FrameBasedTextProcessor, self).__init__(
             settings=settings,
             contexts_printer=contexts_printer,
             opinion_statistic_printer=opinion_statistic_printer,

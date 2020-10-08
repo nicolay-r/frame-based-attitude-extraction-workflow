@@ -2,7 +2,7 @@
 import collections
 from os import path
 from io_utils import create_dir
-from texts.extraction.frame_based.process import FrameDependentTextProcessor
+from texts.extraction.frame_based.process import FrameBasedTextProcessor
 from texts.extraction.settings import Settings
 from texts.printing.contexts import ContextsPrinter
 from texts.printing.statistics.base import OpinionStatisticBasePrinter
@@ -22,7 +22,7 @@ def run_re_by_frames(news_iter, out_dir, settings, parse_frames_in_news_sentence
     contexts_printer = ContextsPrinter(dir=out_dir, prefix="news_er_")
     stat_objs_printer = StatisticObjectsPrinter(path.join(out_dir, "objs_stat.txt"))
 
-    tp = FrameDependentTextProcessor(
+    frame_based = FrameBasedTextProcessor(
         settings=settings,
         contexts_printer=contexts_printer,
         opinion_statistic_printer=statistic_printer,
@@ -31,8 +31,8 @@ def run_re_by_frames(news_iter, out_dir, settings, parse_frames_in_news_sentence
         flag_process_only_titles=True)
 
     for text_index, news_info in news_iter:
-        tp.process_news_and_print(news_info=news_info,
-                                  text_index=text_index)
+        frame_based.process_news_and_print(news_info=news_info,
+                                           text_index=text_index)
 
     statistic_printer.save(filepath=path.join(out_dir, "stat.txt"))
     stat_objs_printer.save()

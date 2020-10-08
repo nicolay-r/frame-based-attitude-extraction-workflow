@@ -6,7 +6,7 @@ from texts.extraction.base import TextProcessor
 from texts.printing.utils import TitleDescriptor
 
 
-class OpinionDependentTextProcessor(TextProcessor):
+class PairBasedTextProcessor(TextProcessor):
 
     pref = "[OpinionDependentProcessor]: "
 
@@ -21,7 +21,7 @@ class OpinionDependentTextProcessor(TextProcessor):
                  parse_frames_in_news_sentences,
                  object_statistic_printer=None):
         assert(isinstance(expected_opinions, OpinionCollection))
-        super(OpinionDependentTextProcessor, self).__init__(
+        super(PairBasedTextProcessor, self).__init__(
             settings=settings,
             contexts_printer=contexts_printer,
             parse_frames_in_news_sentences=parse_frames_in_news_sentences,

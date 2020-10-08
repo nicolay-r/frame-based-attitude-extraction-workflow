@@ -1,12 +1,12 @@
 from core.evaluation.labels import NeutralLabel
 from core.runtime.parser import ParsedText
 from core.runtime.ref_opinon import RefOpinion
-from texts.extraction.frame_based.process import FrameDependentTextProcessor
+from texts.extraction.frame_based.process import FrameBasedTextProcessor
 from texts.printing.quiz import QuizPrinter
 from texts.printing.utils import ContextDescriptor
 
 
-class QuizTextProcessor(FrameDependentTextProcessor):
+class QuizTextProcessor(FrameBasedTextProcessor):
 
     def __init__(self,
                  settings,
