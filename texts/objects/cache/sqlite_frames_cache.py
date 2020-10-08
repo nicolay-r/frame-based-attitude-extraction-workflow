@@ -4,7 +4,7 @@ from os.path import join
 from core.helpers.frames import FramesHelper
 from core.processing.lemmatization.base import Stemmer
 from core.source.frames.variants import FrameVariantInText, FrameVariant
-from texts.extraction import parsed_news_utils
+from texts.extraction.text_parser import terms_utils
 from texts.frames import TextFrameVariantsCollection
 from texts.objects.cache.sqlite_base import BaseSQLiteObjectCache
 from texts.readers.utils import NewsInfo
@@ -139,11 +139,11 @@ class SQLiteFramesCacheData(BaseSQLiteObjectCache):
         for s_ind, sentence in enumerate(s_it):
             assert(isinstance(sentence, str))
 
-            lemma_terms = parsed_news_utils.to_input_terms(text=sentence,
-                                                           stemmer=self.__stemmer,
-                                                           ner=None,
-                                                           lemmatized_terms=True,
-                                                           return_parsed_text=False)
+            lemma_terms = terms_utils.to_input_terms(text=sentence,
+                                                     stemmer=self.__stemmer,
+                                                     ner=None,
+                                                     lemmatized_terms=True,
+                                                     return_parsed_text=False)
 
             yield s_ind - 1, lemma_terms
 

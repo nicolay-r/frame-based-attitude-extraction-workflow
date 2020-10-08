@@ -20,14 +20,11 @@ class Settings(object):
     def __init__(self,
                  synonyms_collection_filepath,
                  frames_collection_filepath,
-                 restore_missed_objects,
-                 use_auth_list=True,
                  init_ner=True,
                  init_stemmer=True,
                  init_frames=True,
                  use_ner_cache_only=False,
                  ner_name=supported.ONTONOTES_BERT_MULT_NAME):
-        assert(isinstance(use_auth_list, bool))
         assert(isinstance(init_ner, bool))
         assert(isinstance(init_frames, bool))
         assert(isinstance(init_stemmer, bool))
@@ -42,8 +39,7 @@ class Settings(object):
         self.__lexicon = None  # Lexicon.from_csv(join(io_utils.get_data_root(), "rusentilex.csv"))
         self.__pos_tagger = None
         self.__syntax = None
-        self.__restore_missed_objects = restore_missed_objects
-        self.__use_auth_list = use_auth_list
+        self.__use_auth_list = False
         self.__frames_cache = None
 
         # NER
@@ -102,10 +98,6 @@ class Settings(object):
     @property
     def FramesCache(self):
         return self.__frames_cache
-
-    @property
-    def RestoreMissedObjects(self):
-        return self.__restore_missed_objects
 
     @property
     def Stemmer(self):

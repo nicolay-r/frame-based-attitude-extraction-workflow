@@ -3,11 +3,11 @@ from core.evaluation.labels import NeutralLabel
 from core.runtime.ref_opinon import RefOpinion
 from core.source.opinion import OpinionCollection, Opinion
 from core.source.synonyms import SynonymsCollection
-from texts.extraction.parsed_news_utils import to_input_terms
+from texts.extraction.default import Default
+from texts.extraction.text_parser.base import process_sentence_core_static
 from texts.extraction.settings import Settings
 from texts.frames import TextFrameVariantsCollection
 from texts.objects.collection import TextObjectsCollection
-from texts.objects.extraction.extractor import NerExtractor
 from texts.readers.utils import NewsInfo
 from texts.text_info import NewsSentenceInfo
 from texts.printing.contexts import ContextsPrinter
@@ -47,12 +47,10 @@ class TextProcessor(object):
         self.__parse_frames_in_news_sentences = parse_frames_in_news_sentences
         self.__check_obj_preposition_in_title = True
 
-        self.__ner_extractor = NerExtractor(
+        self.__ner_extractor = Default.create_ner_extractor(
             ner=settings.NER,
             ner_cache=settings.NerCache,
-            objs_to_restore=settings.AuthorizedObjects if settings.RestoreMissedObjects else None,
-            fix_obj_value=True,
-            auth_objs_check_func=settings.default_authorization_check)
+            default_auth_check=settings.default_authorization_check)
 
         self.__debug_opinions_created = 0
         self.__debug_opinions_with_missed_synonyms = 0
@@ -265,14 +263,29 @@ class TextProcessor(object):
 
         return opinion_refs, title_opinions
 
-    def __get_news_id_by_news_info(self, news_info):
-        """ This is how we treat filename, i.e. we consider the latter as id.
-        """
-        return news_info.FileName
+    def _process_sentence_core(self, news_info, s_ind=NewsSentenceInfo.TITLE_SENT_IND):
+        using_frames_cache = self.__settings.FramesCache is not None
+        return process_sentence_core_static(
+            news_info=news_info,
+            s_ind=s_ind,
+            stemmer=self.__settings.Stemmer,
+            ner=self.__settings.NER,
+            ner_extractor=self.__ner_extractor,
+            need_whole_text_lemmatization=not using_frames_cache,
+            parse_frames_in_news_sentences=self.__parse_frames_in_news_sentences,
+            using_frames_cache=using_frames_cache,
+            frames_helper=self.__settings.FramesHelper,
+            frames_cache=self.__settings.FramesCache)
 
     # endregion
 
     # region private methods
+
+    @staticmethod
+    def __get_news_id_by_news_info(news_info):
+        """ This is how we treat filename, i.e. we consider the latter as id.
+        """
+        return news_info.FileName
 
     def __guarantee_synonyms_presence(self, synonyms, obj_value):
         if not synonyms.has_synonym(obj_value):
@@ -281,45 +294,6 @@ class TextProcessor(object):
             return False
 
         return True
-
-    def _process_sentence_core(self, news_info, s_ind=NewsSentenceInfo.TITLE_SENT_IND):
-        """
-        The main sentence processor, where sentence considered to be a news title or
-        a part of its contents.
-        By default, it is assumed to parse news title.
-        """
-        assert(isinstance(news_info, NewsInfo))
-        assert(isinstance(s_ind, int))
-
-        news_sentence_info = NewsSentenceInfo(news_id=self.__get_news_id_by_news_info(news_info),
-                                              sent_id=s_ind)
-
-        # parse text
-        sentence_terms, parsed_sentence = to_input_terms(
-            text=news_info.Title if news_sentence_info.IsTitle else news_info.get_sentence(s_ind),
-            stemmer=self.Settings.Stemmer,
-            lemmatized_terms=self._need_whole_text_lemmatization(),
-            ner=self.Settings.NER)
-
-        # parse ner
-        auth_text_objects = self._NerExtractor.extract(
-            terms_list=sentence_terms,
-            text_info=news_sentence_info,
-            iter_lemmas_in_range=lambda terms_range: parsed_sentence.iter_lemmas(
-                terms_range=terms_range,
-                need_cache=False),
-            is_term_func=lambda t_ind: parsed_sentence.is_term(t_ind))
-
-        objects = TextObjectsCollection(auth_text_objects)
-
-        # parse frames
-        if self.__parse_frames_in_news_sentences:
-            s_frames = self.__get_sentence_frames(lemmas=sentence_terms,
-                                                  news_sentence_info=news_sentence_info)
-        else:
-            s_frames = TextFrameVariantsCollection.create_empty()
-
-        return sentence_terms, parsed_sentence, objects, s_frames
 
     @staticmethod
     def __check_auth_correctness(i, j, objects):
@@ -408,26 +382,5 @@ class TextProcessor(object):
                 tag = synonyms.get_synonym_group_index(obj_value)
 
             obj.set_tag(tag)
-
-    def __get_sentence_frames(self, lemmas, news_sentence_info):
-        assert(isinstance(news_sentence_info, NewsSentenceInfo))
-
-        if self._using_frames_cache():
-            # Reading information from cache.
-            return TextFrameVariantsCollection.from_cache(
-                cache=self.Settings.FramesCache,
-                filename=news_sentence_info.NewsIndex,
-                s_ind=news_sentence_info.SentenceIndex)
-
-        # Running frames extraction on flight.
-        return TextFrameVariantsCollection.from_parsed_text(
-            lemmas=lemmas,
-            frames_helper=self.Settings.FramesHelper)
-
-    def _need_whole_text_lemmatization(self):
-        return not self._using_frames_cache()
-
-    def _using_frames_cache(self):
-        return self.Settings.FramesCache is not None
 
     # endregion

@@ -3,10 +3,6 @@ from core.evaluation.labels import NeutralLabel
 from core.source.opinion import OpinionCollection, Opinion
 from texts.readers.utils import NewsInfo
 from texts.extraction.base import TextProcessor
-from texts.extraction.parsed_news_utils import to_input_terms
-from texts.frames import TextFrameVariantsCollection
-from texts.objects.collection import TextObjectsCollection
-from texts.text_info import NewsSentenceInfo
 from texts.printing.utils import TitleDescriptor
 
 

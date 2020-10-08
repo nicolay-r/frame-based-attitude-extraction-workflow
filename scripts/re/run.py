@@ -77,25 +77,11 @@ if __name__ == "__main__":
                         default=False,
                         help='Utilize object authorization')
 
-    parser.add_argument('--use-auth-list',
-                        dest='use_auth_list',
-                        action='store_const',
-                        const=True,
-                        default=False,
-                        help='Utilize object authorization by using a list with authorized values')
-
     parser.add_argument('--diff-pairs-list',
                         dest='pairs_list_filepath',
                         nargs='?',
                         help="[<{tasks}> only] Pairs list filepath".format(
                             tasks=",".join([TASK_DIFF_EXTRACTION, TASK_EXTRACTION_BY_PAIRS])))
-
-    parser.add_argument('--restore_missed_objects',
-                        dest='restore_missed_objects',
-                        action='store_const',
-                        const=True,
-                        default=False,
-                        help='Restore, missed Named Entity Recognition, objects (using authorized objects list)')
 
     parser.add_argument('--use-ner-cache-only',
                         dest='use_ner_cache',
@@ -126,7 +112,6 @@ if __name__ == "__main__":
     src_dir = NewsSourceDirArg.read_argument(args)
     out_dir = OutputDirArg.read_argument(args)
     use_ner_cache_only = args.use_ner_cache
-    restore_missed_objects = args.restore_missed_objects
     parse_frames_in_sents = ParseFramesInSentencesArgs.read_argument(args)
     rusentiframes_filepath = RuSentiFramesCacheArgs.read_argument(args)
     start_from_index = NewsStartFromIndexArg.read_argument(args)
@@ -134,11 +119,9 @@ if __name__ == "__main__":
     reader = SourceNewsReaderArg.read_argument(args)
 
     # Setup text processing settings.
-    settings = Settings(use_auth_list=args.use_auth_list,
-                        ner_name=ner_type,
+    settings = Settings(ner_name=ner_type,
                         use_ner_cache_only=use_ner_cache_only,
                         frames_collection_filepath=rusentiframes_filepath,
-                        restore_missed_objects=restore_missed_objects,
                         synonyms_collection_filepath=synonyms_filepath)
 
     # Setup ner cache

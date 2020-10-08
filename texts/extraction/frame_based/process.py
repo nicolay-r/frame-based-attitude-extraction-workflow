@@ -2,12 +2,9 @@
 from core.evaluation.labels import Label
 from texts.readers.utils import NewsInfo
 from texts.extraction.base import TextProcessor
-from texts.extraction.parsed_news_utils import to_input_terms
 from texts.extraction.frame_based.limits import NerTypesLimitation
 from texts.extraction.frame_based.utils import get_frames_polarities, mean
 from texts.frames import TextFrameVariantsCollection
-from texts.objects.collection import TextObjectsCollection
-from texts.text_info import NewsSentenceInfo
 from texts.printing.utils import TitleDescriptor
 from texts.utils import optional_invert_label
 

@@ -3,9 +3,7 @@ from core.processing.ner.base import NamedEntityRecognition
 from core.runtime.parser import ParsedText, TextParser
 
 
-def to_input_terms(text, ner, stemmer,
-                   return_parsed_text=True,
-                   lemmatized_terms=False):
+def to_input_terms(text, ner, stemmer, return_parsed_text=True, lemmatized_terms=False):
     assert(isinstance(ner, NamedEntityRecognition) or ner is None)
     assert (isinstance(stemmer, Stemmer) or stemmer is None)
 

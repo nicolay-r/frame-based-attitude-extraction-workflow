@@ -4,7 +4,7 @@ from os.path import join
 from core.processing.lemmatization.base import Stemmer
 from core.processing.ner.base import NamedEntityRecognition
 from core.processing.ner.obj_decs import NerObjectDescriptor
-from texts.extraction import parsed_news_utils
+from texts.extraction.text_parser import terms_utils
 from texts.objects.cache.sqlite_base import BaseSQLiteObjectCache
 from texts.readers.utils import NewsInfo
 
@@ -123,7 +123,7 @@ class SQLiteNERCacheData(BaseSQLiteObjectCache):
                 yield b_inds, b_sentences
                 b_inds, b_sentences = [], []
 
-            s_input_terms = parsed_news_utils.to_input_terms(
+            s_input_terms = terms_utils.to_input_terms(
                 text=sentence,
                 stemmer=self.__stemmer,
                 ner=self.__ner,
