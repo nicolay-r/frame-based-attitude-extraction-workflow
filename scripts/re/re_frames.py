@@ -6,6 +6,7 @@ from texts.extraction.frame_based.process import FrameDependentTextProcessor
 from texts.extraction.settings import Settings
 from texts.printing.contexts import ContextsPrinter
 from texts.printing.statistics.base import OpinionStatisticBasePrinter
+from texts.printing.statistics.objects import StatisticObjectsPrinter
 
 
 def run_re_by_frames(news_iter, out_dir, settings, parse_frames_in_news_sentences):
@@ -22,11 +23,13 @@ def run_re_by_frames(news_iter, out_dir, settings, parse_frames_in_news_sentence
     contexts_printer = ContextsPrinter(dir=out_dir,
                                        prefix="news_er_")
 
-    tp = FrameDependentTextProcessor(settings=settings,
-                                     contexts_printer=contexts_printer,
-                                     opinion_statistic_printer=statistic_printer,
-                                     parse_frames_in_news_sentences=parse_frames_in_news_sentences,
-                                     flag_process_only_titles=True)
+    tp = FrameDependentTextProcessor(
+        settings=settings,
+        contexts_printer=contexts_printer,
+        opinion_statistic_printer=statistic_printer,
+        object_statistic_printer=StatisticObjectsPrinter(path.join(out_dir, "objs_stat.txt")),
+        parse_frames_in_news_sentences=parse_frames_in_news_sentences,
+        flag_process_only_titles=True)
 
     for text_index, news_info in news_iter:
         tp.process_news_and_print(news_info=news_info,
