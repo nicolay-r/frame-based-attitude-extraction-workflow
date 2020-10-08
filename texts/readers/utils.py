@@ -18,6 +18,8 @@ class NewsInfo:
         self.__sentences = sentences
         self.__title = title
 
+    # region properties
+
     @property
     def Title(self):
         return self.__title
@@ -26,12 +28,31 @@ class NewsInfo:
     def FileName(self):
         return self.__filename
 
+    # endregion
+
+    # region private methods
+
+    def __sentences_count(self):
+        return len(self.__sentences)
+
+    # endregion
+
+    # region public methods
+
     def iter_sentences(self):
         for p in self.__sentences:
             yield p
 
+    def sentences_count(self):
+        return self.__sentences_count()
+
+    def get_sentence(self, s_ind):
+        return self.__sentences[s_ind]
+
+    # endregion
+
     def __len__(self):
-        return len(self.__sentences) + 1 if self.__title is not None else 0
+        return self.__sentences_count() + 1 if self.__title is not None else 0
 
 
 def iter_text_by_nonempty_sentences(original_text):
