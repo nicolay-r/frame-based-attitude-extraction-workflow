@@ -88,12 +88,7 @@ class FrameDependentTextProcessor(TextProcessor):
         if len(news_info) == 0:
             return None
 
-        news_id = self._get_news_id_by_news_info(news_info)
-        news_sentence_info = NewsSentenceInfo.create_for_title(news_id=news_id)
-
-        title_terms, parsed_title, title_objects, title_frames = self._process_sentence_core(
-            sentence_text=news_info.Title,
-            news_sentence_info=news_sentence_info)
+        title_terms, parsed_title, title_objects, title_frames = self._process_sentence_core(news_info)
 
         if len(title_frames) == 0:
             return None
@@ -122,8 +117,7 @@ class FrameDependentTextProcessor(TextProcessor):
             return td, None, title_opinions, None
 
         cds, text_opinions = self.process_news_content(
-            news_id=self._get_news_id_by_news_info(news_info),
-            sentences=news_info.iter_sentences(),
+            news_info=news_info,
             title_opinions=title_opinions,
             synonyms=self.Settings.Synonyms)
 

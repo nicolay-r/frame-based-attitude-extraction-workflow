@@ -8,6 +8,7 @@ from texts.extraction.settings import Settings
 from texts.frames import TextFrameVariantsCollection
 from texts.objects.collection import TextObjectsCollection
 from texts.objects.extraction.extractor import NerExtractor
+from texts.readers.utils import NewsInfo
 from texts.text_info import NewsSentenceInfo
 from texts.printing.contexts import ContextsPrinter
 from texts.printing.statistics.base import OpinionStatisticBasePrinter
@@ -142,19 +143,18 @@ class TextProcessor(object):
     def decide_label_of_pair_in_title_optional(self, i, j, title_objects, title_frames):
         raise Exception("Not implemented")
 
-    def process_news_content(self, news_id, sentences, title_opinions, synonyms):
+    def process_news_content(self, news_info, title_opinions, synonyms):
         """ news_id: assumes a unique name/key
+        Perform sentences parsing, excluding news title
         """
+        assert(isinstance(news_info, NewsInfo))
 
         text_opinions = OpinionCollection(opinions=None, synonyms=synonyms)
         cds = []
 
-        for index, sentence in enumerate(sentences):
-            assert(isinstance(sentence, str))
+        for index in range(news_info.sentences_count()):
 
-            _, parsed_sentence, s_objects, s_frames = self._process_sentence_core(
-                sentence_text=sentence,
-                news_sentence_info=NewsSentenceInfo(news_id=news_id, sent_id=index))
+            _, parsed_sentence, s_objects, s_frames = self._process_sentence_core(news_info, s_ind=index)
 
             s_opinion_refs, s_opinions_list = self.__extract_sentence_opinion_refs(
                 text_objects_collection=s_objects,
@@ -265,7 +265,9 @@ class TextProcessor(object):
 
         return opinion_refs, title_opinions
 
-    def _get_news_id_by_news_info(self, news_info):
+    def __get_news_id_by_news_info(self, news_info):
+        """ This is how we treat filename, i.e. we consider the latter as id.
+        """
         return news_info.FileName
 
     # endregion
@@ -280,19 +282,24 @@ class TextProcessor(object):
 
         return True
 
-    def _process_sentence_core(self, sentence_text, news_sentence_info):
+    def _process_sentence_core(self, news_info, s_ind=NewsSentenceInfo.TITLE_SENT_IND):
         """
-        The main sentence processor, where sentence considered to be a news titile or
+        The main sentence processor, where sentence considered to be a news title or
         a part of its contents.
+        By default, it is assumed to parse news title.
         """
-        assert(isinstance(sentence_text, str))
-        assert(isinstance(news_sentence_info, NewsSentenceInfo))
+        assert(isinstance(news_info, NewsInfo))
+        assert(isinstance(s_ind, int))
+
+        news_sentence_info = NewsSentenceInfo(news_id=self.__get_news_id_by_news_info(news_info),
+                                              sent_id=s_ind)
 
         # parse text
-        sentence_terms, parsed_sentence = to_input_terms(text=sentence_text,
-                                                         stemmer=self.Settings.Stemmer,
-                                                         lemmatized_terms=self._need_whole_text_lemmatization(),
-                                                         ner=self.Settings.NER)
+        sentence_terms, parsed_sentence = to_input_terms(
+            text=news_info.Title if news_sentence_info.IsTitle else news_info.get_sentence(s_ind),
+            stemmer=self.Settings.Stemmer,
+            lemmatized_terms=self._need_whole_text_lemmatization(),
+            ner=self.Settings.NER)
 
         # parse ner
         auth_text_objects = self._NerExtractor.extract(
