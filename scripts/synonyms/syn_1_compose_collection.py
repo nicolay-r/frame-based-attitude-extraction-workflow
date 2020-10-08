@@ -44,7 +44,7 @@ if __name__ == "__main__":
                         dest='obj_values_dir',
                         type=str,
                         nargs=1,
-                        help='Russian thesaurus filepath (xml based file) for Nouns')
+                        help='Source dir')
 
     # Parse arguments.
     OptionalOutputDirArg.add_argument(parser)
@@ -69,16 +69,13 @@ if __name__ == "__main__":
         print(filename)
         for obj_value, obj_type in iter_words_with_types_from_filepath(filename):
 
-            lemma_value = stemmer.lemmatize_to_str(obj_value)
-
-            if lemma_value in ruthes_nouns:
+            if obj_value in ruthes_nouns:
                 log_found_in_ruthes += 1
-                group_value = ruthes_nouns[lemma_value]
+                group_value = ruthes_nouns[obj_value]
             else:
                 log_lemmas_kept += 1
-                group_value = lemma_value
+                group_value = obj_value
 
-            lemma_value = lemma_value.strip()
             group_value = group_value.strip()
 
             # Register value in result.
@@ -87,7 +84,7 @@ if __name__ == "__main__":
                 d_s.add(group_value)
                 syn_groups[group_value] = d_s
 
-            syn_groups[group_value].add(lemma_value)
+            syn_groups[group_value].add(obj_value)
 
     create_dir(output_dir)
 
