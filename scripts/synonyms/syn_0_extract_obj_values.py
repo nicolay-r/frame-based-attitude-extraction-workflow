@@ -11,6 +11,7 @@ from scripts.args.ner_type import NerTypeArg
 from scripts.args.src_news_dir import NewsSourceDirArg
 from scripts.args.out_dir import OutputDirArg
 from scripts.synonyms.values_extractor import TextObjectValuesExtractor
+from texts.objects.authorized.object import AuthTextObject
 from texts.extraction.default import Default
 from texts.extraction.frame_based.obj_auth import TextObjectAuthorizer
 from texts.objects.cache.sqlite_ner_cache import SQLiteNERCacheData
@@ -70,18 +71,22 @@ if __name__ == "__main__":
 
                 news_processed += 1
 
-                values_it = obj_values_extractor.iter_for_news(news_info=news_info)
+                for obj in obj_values_extractor.iter_for_news(news_info=news_info):
+                    assert(isinstance(obj, AuthTextObject))
 
-                for obj_value, obj_type in values_it:
-
-                    if obj_value in added_words:
+                    if not obj.IsAuthorized:
                         continue
 
-                    f.write("{word}{sep}{type}\n".format(word=obj_value,
-                                                         sep=WORD_TYPE_SEPARATOR,
-                                                         type=obj_type))
+                    value = obj.get_value()
 
-                    added_words.add(obj_value)
+                    if value in added_words:
+                        continue
+
+                    f.write("{word}{sep}{type}\n".format(word=value,
+                                                         sep=WORD_TYPE_SEPARATOR,
+                                                         type=obj.Type))
+
+                    added_words.add(value)
 
     # Saving log
     with open(join(output_dir, 'log_{f_name}.txt'.format(f_name=f_name)), "w") as f:
