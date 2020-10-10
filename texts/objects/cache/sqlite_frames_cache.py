@@ -53,7 +53,7 @@ class SQLiteFramesCacheData(BaseSQLiteObjectCache):
             parse_sentences=parse_sentences,
             folder=folder)
 
-        print("Using the following Frames cache: {}".format(db_filepath))
+        print("Frames cache: {}".format(db_filepath))
 
         return cls(stemmer=None,
                    frames_helper=None,

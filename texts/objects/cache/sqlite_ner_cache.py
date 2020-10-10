@@ -40,6 +40,8 @@ class SQLiteNERCacheData(BaseSQLiteObjectCache):
 
         super(SQLiteNERCacheData, self).__init__(db_filepath=db_filepath)
 
+        print("NER cache: {}".format(db_filepath))
+
         self.__ner = ner
 
         self.__stemmer = None

@@ -17,8 +17,6 @@ class BaseSQLiteObjectCache(BaseObjectCache):
         self.__db_filepath = db_filepath
         self._cursor = None
 
-        print("DATABASE FILEPATH: {}".format(self.__db_filepath))
-
         self.__fetched_filename = None
         self.__fetched_data = {}
 
