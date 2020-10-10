@@ -10,8 +10,6 @@ class TextObjectAuthorizer:
 
         self.__supported_ner_types = set(l)
 
-        print(self.__supported_ner_types)
-
     @property
     def SupportedNerTypesSet(self):
         return self.__supported_ner_types
