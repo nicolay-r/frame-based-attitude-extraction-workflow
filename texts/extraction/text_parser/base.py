@@ -22,7 +22,7 @@ def process_sentence_core_static(news_info, s_ind, stemmer, ner,
                                           sent_id=s_ind)
 
     # parse text
-    sentence_terms, parsed_sentence = to_input_terms(
+    terms, parsed = to_input_terms(
         text=news_info.Title if news_sentence_info.IsTitle else news_info.get_sentence(s_ind),
         stemmer=stemmer,
         lemmatized_terms=need_whole_text_lemmatization,
@@ -30,26 +30,25 @@ def process_sentence_core_static(news_info, s_ind, stemmer, ner,
 
     # parse ner
     auth_text_objects = ner_extractor.extract(
-        terms_list=sentence_terms,
+        terms_list=terms,
         text_info=news_sentence_info,
-        iter_lemmas_in_range=lambda terms_range: parsed_sentence.iter_lemmas(
+        iter_lemmas_in_range=lambda terms_range: parsed.iter_lemmas(
             terms_range=terms_range,
             need_cache=False),
-        is_term_func=lambda t_ind: parsed_sentence.is_term(t_ind))
-
+        is_term_func=lambda t_ind: parsed.is_term(t_ind))
     objects = TextObjectsCollection(auth_text_objects)
 
     # parse frames
     if parse_frames:
-        s_frames = __get_sentence_frames(lemmas=sentence_terms,
-                                         using_frames_cache=using_frames_cache,
-                                         news_sentence_info=news_sentence_info,
-                                         frames_cache=frames_cache,
-                                         frames_helper=frames_helper)
+        frames = __get_sentence_frames(lemmas=terms,
+                                       using_frames_cache=using_frames_cache,
+                                       news_sentence_info=news_sentence_info,
+                                       frames_cache=frames_cache,
+                                       frames_helper=frames_helper)
     else:
-        s_frames = TextFrameVariantsCollection.create_empty()
+        frames = TextFrameVariantsCollection.create_empty()
 
-    return sentence_terms, parsed_sentence, objects, s_frames
+    return terms, parsed, objects, frames
 
 
 def __get_sentence_frames(lemmas, news_sentence_info, frames_cache, frames_helper, using_frames_cache):
