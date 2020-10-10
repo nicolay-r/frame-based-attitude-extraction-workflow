@@ -73,10 +73,6 @@ class TextProcessor(object):
         return self.__ner_extractor
 
     @property
-    def ContextPrinter(self):
-        return self.__context_printer
-
-    @property
     def OpinionStatisticPrinter(self):
         return self.__opinion_statistic_printer
 
@@ -88,9 +84,9 @@ class TextProcessor(object):
         assert(isinstance(title_descriptor, TitleDescriptor))
         assert(isinstance(context_descriptors, list))
 
-        self.ContextPrinter.print_news_title(title_descriptor)
+        self.__context_printer.print_news_title(title_descriptor)
         for cd in context_descriptors:
-            self.ContextPrinter.print_extracted_opinion(cd)
+            self.__context_printer.print_extracted_opinion(cd)
 
     def update_opinions_statistics(self, text_opinions):
         assert(isinstance(text_opinions, OpinionCollection))
