@@ -264,6 +264,7 @@ class TextProcessor(object):
 
     def _process_sentence_core(self, news_info, s_ind=NewsSentenceInfo.TITLE_SENT_IND):
         using_frames_cache = self.__settings.FramesCache is not None
+        is_title = s_ind == NewsSentenceInfo.TITLE_SENT_IND
         return process_sentence_core_static(
             news_info=news_info,
             s_ind=s_ind,
@@ -271,7 +272,7 @@ class TextProcessor(object):
             ner=self.__settings.NER,
             ner_extractor=self.__ner_extractor,
             need_whole_text_lemmatization=not using_frames_cache,
-            parse_frames_in_news_sentences=self.__parse_frames_in_news_sentences,
+            parse_frames=is_title or self.__parse_frames_in_news_sentences,
             using_frames_cache=using_frames_cache,
             frames_helper=self.__settings.FramesHelper,
             frames_cache=self.__settings.FramesCache)

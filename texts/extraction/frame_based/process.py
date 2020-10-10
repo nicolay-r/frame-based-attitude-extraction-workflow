@@ -126,13 +126,13 @@ class FrameBasedTextProcessor(TextProcessor):
 
         # Checking left object.
         l_obj = title_objects.get_object(i)
-        if not self.__ner_types_limitation.is_valid_obj(l_obj):
+        if not self.__ner_types_limitation.is_auth(l_obj):
             self.__debug_title_opinions_with_objs_non_valid_by_type += 1
             return None
 
         # Checking right object.
         r_obj = title_objects.get_object(j)
-        if not self.__ner_types_limitation.is_valid_obj(r_obj):
+        if not self.__ner_types_limitation.is_auth(r_obj):
             self.__debug_title_opinions_with_objs_non_valid_by_type += 1
             return None
 

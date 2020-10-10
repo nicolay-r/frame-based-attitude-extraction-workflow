@@ -7,7 +7,7 @@ from texts.text_info import NewsSentenceInfo
 
 def process_sentence_core_static(news_info, s_ind, stemmer, ner,
                                  ner_extractor, frames_cache, frames_helper,
-                                 parse_frames_in_news_sentences,
+                                 parse_frames,
                                  using_frames_cache,
                                  need_whole_text_lemmatization):
     """
@@ -40,7 +40,7 @@ def process_sentence_core_static(news_info, s_ind, stemmer, ner,
     objects = TextObjectsCollection(auth_text_objects)
 
     # parse frames
-    if parse_frames_in_news_sentences:
+    if parse_frames:
         s_frames = __get_sentence_frames(lemmas=sentence_terms,
                                          using_frames_cache=using_frames_cache,
                                          news_sentence_info=news_sentence_info,

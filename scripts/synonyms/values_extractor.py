@@ -31,7 +31,7 @@ class TextObjectValuesExtractor:
             stemmer=self.__stemmer,
             ner=None,
             frames_helper=None,
-            parse_frames_in_news_sentences=False,
+            parse_frames=False,
             frames_cache=None,
             using_frames_cache=False,
             need_whole_text_lemmatization=False)
