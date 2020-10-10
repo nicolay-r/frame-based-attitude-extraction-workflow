@@ -7,8 +7,26 @@ from texts.objects.authorized.object import AuthTextObject
 
 class TextObjectHelper:
 
+    QUOTE = '&quote'
+
     def __init__(self):
         pass
+
+    @staticmethod
+    def fix_terms_inplace(input_terms):
+        """
+        Fix remove extra garbage, that was not captured by text reader.
+        """
+
+        for i, term in enumerate(input_terms):
+
+            if TextObjectHelper.QUOTE not in term:
+                continue
+
+            # Removing quote
+            from_ind = term.index(TextObjectHelper.QUOTE)
+            if from_ind > 0:
+                input_terms[i] = term[:from_ind]
 
     @staticmethod
     def try_fix_object_value(obj_desc, input_terms, is_term_func, check_obj_includes_non_term=True):

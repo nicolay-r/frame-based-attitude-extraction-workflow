@@ -99,12 +99,16 @@ class NerExtractor:
 
             fixed_obj_desc = obj_desc
             if self.__fixing_obj_values:
+
+                # Fix borders.
                 fixed_obj_desc = TextObjectHelper.try_fix_object_value(obj_desc=obj_desc,
                                                                        input_terms=terms_list,
                                                                        is_term_func=is_term_func)
 
                 if fixed_obj_desc is None:
                     continue
+
+                TextObjectHelper.fix_terms_inplace(terms_list)
 
             lemmas = list(iter_lemmas_in_range(fixed_obj_desc.get_range()))
 
