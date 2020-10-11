@@ -7,10 +7,24 @@ from texts.objects.authorized.object import AuthTextObject
 
 class TextObjectHelper:
 
-    QUOTE = '&quot'
-
     def __init__(self):
         pass
+
+    @staticmethod
+    def __optionally_fix(term, template, remove):
+        if template not in term:
+            return term
+
+        if not remove:
+            # Perform cut operation
+            from_ind = term.index(template)
+            if from_ind > 0:
+                return term[:from_ind]
+        else:
+            # Removing the related template.
+            return term.replace(template, "")
+
+        return term
 
     @staticmethod
     def fix_terms_inplace(input_terms):
@@ -20,13 +34,12 @@ class TextObjectHelper:
 
         for i, term in enumerate(input_terms):
 
-            if TextObjectHelper.QUOTE not in term:
-                continue
+            # Optionally remove &quote.
+            upd_term = TextObjectHelper.__optionally_fix(term=term, template='&quot', remove=True)
+            # Optionally cut everything till &#CODE.
+            upd_term = TextObjectHelper.__optionally_fix(term=upd_term, template='&#', remove=False)
 
-            # Removing quote
-            from_ind = term.index(TextObjectHelper.QUOTE)
-            if from_ind > 0:
-                input_terms[i] = term[:from_ind]
+            input_terms[i] = upd_term
 
     @staticmethod
     def try_fix_object_value(obj_desc, input_terms, is_term_func, check_obj_includes_non_term=True):
