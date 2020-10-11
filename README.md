@@ -18,11 +18,19 @@ It provides scripts for sentiment attitude extraction using frame-based method.
 * deep-pavlov == 1.11.0 
     * Optional, for `bert-mult-ontonotes` NER model
     
-# Collection Reader API
+## Resources
+* [RuWordNet](https://ruwordnet.ru/en/)
+* [RuSentiFrames-2.0](https://github.com/nicolay-r/RuSentiFrames)
+    
+# Quick start
 
 Please refer to the base class [API](texts/readers/base.py)
 
-# Preparation pipeline order
+> TODO#1. Provide example and simple reader.
+>
+> TODO#2. Provide everything via Makefile.
+
+## Optional: caching resources for processing speed enhancement 
 
 1. NER cache [[readme]](scripts/cache/ner/README.md);
 2. Frames cache [[readme]](scripts/cache/frames/README.md);

@@ -135,20 +135,14 @@ if __name__ == "__main__":
         parse_sentences=parse_frames_in_sents)
     settings.set_frames_cache(frames_cache)
 
-    task_name = get_task_name(task_index=task_to_index[task],
-                              prefix=basename(src_dir),
-                              ner_name=ner_type)
-
     # initialize output dir.
-    actual_out_dir = join(out_dir, task_name) \
-        if start_from_index == 0 \
-        else get_output_root_task_new_part_folder(out_dir=out_dir,
-                                                  task_name=task_name)
+    actual_out_dir = join(out_dir, task) if start_from_index == 0 \
+        else get_output_root_task_new_part_folder(out_dir=out_dir, task_name=task)
+    print("Output dir:", actual_out_dir)
 
     with ner_cache:
         with frames_cache:
 
-            print("Output dir:", actual_out_dir)
             news_it = reader.get_news_iter(src_dir, start_with_index=start_from_index)
 
             if task == TASK_EXTRACTION_BY_PAIRS:
