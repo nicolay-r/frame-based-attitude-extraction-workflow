@@ -7,7 +7,7 @@ from texts.objects.authorized.object import AuthTextObject
 
 class TextObjectHelper:
 
-    QUOTE = '&quote'
+    QUOTE = '&quot'
 
     def __init__(self):
         pass
