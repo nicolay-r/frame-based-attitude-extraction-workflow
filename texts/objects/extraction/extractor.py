@@ -108,12 +108,10 @@ class NerExtractor:
                 if fixed_obj_desc is None:
                     continue
 
-                TextObjectHelper.fix_terms_inplace(terms_list)
-
             lemmas = list(iter_lemmas_in_range(fixed_obj_desc.get_range()))
 
             text_object = AuthTextObject.create(
-                lemmas=lemmas,
+                lemmas=TextObjectHelper.fix_terms_inplace(lemmas),
                 position=fixed_obj_desc.Position,
                 obj_type=obj_desc.ObjectType,
                 is_object_auth=self.__auth_objs_check_func,
