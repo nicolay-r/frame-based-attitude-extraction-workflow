@@ -38,6 +38,9 @@ class TextObjectHelper:
             upd_term = TextObjectHelper.__optionally_fix(term=term, template='&quot', remove=True)
             # Optionally cut everything till &#CODE.
             upd_term = TextObjectHelper.__optionally_fix(term=upd_term, template='&#', remove=False)
+            # Extra tags.
+            upd_term = TextObjectHelper.__optionally_fix(term=upd_term, template='</h1>', remove=True)
+            upd_term = TextObjectHelper.__optionally_fix(term=upd_term, template='</h2>', remove=True)
 
             input_terms[i] = upd_term
 
