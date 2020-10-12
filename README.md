@@ -24,10 +24,10 @@ It provides scripts for sentiment attitude extraction using frame-based method.
     
 # Quick start
 
-Please refer to the simple [news reader](texts/readers/simple.py):
-    * Reading from a single file;
-    * Documents separation via `\n`;
-    * Every sentence at new line, where first one is a title.
+Please refer to the [simple news reader](texts/readers/simple.py):
+* Reading from a single file;
+* Documents separation via `\n`;
+* Every sentence at new line, where first one is a title.
 
 > TODO#1. Provide example and simple reader.
 >
