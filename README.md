@@ -19,12 +19,15 @@ It provides scripts for sentiment attitude extraction using frame-based method.
     * Optional, for `bert-mult-ontonotes` NER model
     
 ## Resources
-* [RuWordNet](https://ruwordnet.ru/en/)
+* ###### [RuWordNet](https://ruwordnet.ru/en/) [Contact with authors to download]
 * [RuSentiFrames-2.0](https://github.com/nicolay-r/RuSentiFrames)
     
 # Quick start
 
-Please refer to the base class [API](texts/readers/base.py)
+Please refer to the simple [news reader](texts/readers/simple.py):
+    * Reading from a single file;
+    * Documents separation via `\n`;
+    * Every sentence at new line, where first one is a title.
 
 > TODO#1. Provide example and simple reader.
 >
