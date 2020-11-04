@@ -6,6 +6,7 @@ from core.source.synonyms import SynonymsCollection
 from neutral.ext_auth_text_obj import ExtendedAuthTextObject
 from neutral.log import Log
 from neutral.opinion_stat import OpinionStatisticPrinter
+from texts.extraction.default import Default
 from texts.printing.contexts import ContextsPrinter
 from texts.printing.diffcontexts import DiffContextsPrinter
 from texts.printing.utils import AttitudeDescriptionTemplate, AttitudeKey, ObjectKey, FrameVariantKey
@@ -41,6 +42,14 @@ class RuAttitudeExpansion(object):
             to_dir = os.path.dirname(to_zip_filepath)
             zip_input.extractall(to_dir)
 
+            # Reading synonyms collection
+            stemmer = Default.create_default_stemmer()
+            synonyms_filepath = os.path.join(to_dir, "synonyms.txt")
+            synonyms = SynonymsCollection.from_file(synonyms_filepath, stemmer=stemmer)
+
+            # Initialize all the related from synonyms collection information.
+            self.__init_from_synonyms(synonyms)
+
             target_filepath = os.path.join(to_dir, "collection-neut.txt")
             with open(os.path.join(to_dir, "collection.txt"), 'r') as f_src:
                 with open(target_filepath, 'w') as f_to:
@@ -50,16 +59,6 @@ class RuAttitudeExpansion(object):
                 target_zip = zipfile.ZipFile(to_zip_filepath, "w")
                 target_zip.write(target_filepath)
                 target_zip.close()
-
-        # TODO. Read synonyms collection from here.
-        synonyms = None
-
-        return SynonymsCollection.from_file(
-            filepath=filepath,
-            stemmer=stemmer,
-            is_read_only=True)
-
-        self.__init_from_synonyms(synonyms)
 
         if log is not None:
             with open(log_filepath, 'w') as f:
@@ -253,7 +252,7 @@ class RuAttitudeExpansion(object):
 
         is_auth = '<AUTH>' in line
 
-        t_begin = line.index('type:')
+        t_begin = line.index('t:')
         t_end = line.index('<', t_begin) if is_auth else len(line)
         obj_type = line[t_begin+5:t_end].strip()
 
