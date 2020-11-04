@@ -4,3 +4,4 @@
 *.gz
 *.xml
 core
+/scripts/synonyms/run_0.sh
