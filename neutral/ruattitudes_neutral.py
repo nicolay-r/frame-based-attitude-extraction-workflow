@@ -17,6 +17,8 @@ from texts.printing.utils import AttitudeDescriptionTemplate, AttitudeKey, Objec
 
 class RuAttitudeExpansion(object):
 
+    auth_tag = "<AUTH>"
+
     def __init__(self, ner_loc_type, locations_to_ignore):
         assert(isinstance(ner_loc_type, str))
         assert(isinstance(locations_to_ignore, set))
@@ -127,6 +129,12 @@ class RuAttitudeExpansion(object):
             if ObjectKey in line:
                 obj = self.__parse_object(line)
                 objects_list.append(obj)
+
+                # We are now consider that participants of an upcomming neutral
+                # attitudes should be also authorized. Therefore we use special
+                # flag in order to update state of the related objects.
+                if obj.Type == self.__ner_loc_type:
+                    line += " {}".format(self.auth_tag)
 
             if AttitudeKey in line:
                 opinion = RuAttitudeExpansion.__parse_sentence_opin(line)
@@ -271,7 +279,7 @@ class RuAttitudeExpansion(object):
         # id_in_sentence = int(line[obj_ind_begin + 4:obj_ind_end])
         value = line[o_begin + 1:o_end]
 
-        is_auth = '<AUTH>' in line
+        is_auth = self.auth_tag in line
 
         type_template = 't:'
         t_begin = line.index(type_template)
