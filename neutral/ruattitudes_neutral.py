@@ -1,11 +1,14 @@
 import os
 import zipfile
+from os.path import join, dirname
+
 from tqdm import tqdm
 
 from core.source.synonyms import SynonymsCollection
 from neutral.ext_auth_text_obj import ExtendedAuthTextObject
-from neutral.log import Log
+from neutral.neut_logger import NeutralOpinionExtractionLogger
 from neutral.opinion_stat import OpinionStatisticPrinter
+from neutral.utils import get_target_filename, archive_all_files_in_zip
 from texts.extraction.default import Default
 from texts.printing.contexts import ContextsPrinter
 from texts.printing.diffcontexts import DiffContextsPrinter
@@ -26,43 +29,52 @@ class RuAttitudeExpansion(object):
 
     # region public methods
 
-    def add_neutral(self,
-                    from_zip_filepath,
-                    to_zip_filepath,
-                    log_filepath,
-                    used_locations_filepath,
-                    neut_opin_stat_filepath):
+    def expand_with_neutral(self,
+                            from_zip_filepath,
+                            cache_dir,
+                            log_filepath,
+                            used_locations_filepath,
+                            neut_opin_stat_filepath):
         assert(isinstance(from_zip_filepath, str))
-        assert(isinstance(to_zip_filepath, str))
+        assert(isinstance(cache_dir, str))
         assert(isinstance(log_filepath, str))
         assert(isinstance(used_locations_filepath, str))
         assert(isinstance(neut_opin_stat_filepath, str))
 
+        # Clearing folder and filling with fresh data.
+        os.system('rm -rf {cache_dir}'.format(cache_dir=cache_dir))
+
+        # Extract everything into cache_dir.
         with zipfile.ZipFile(from_zip_filepath, 'r') as zip_input:
-            to_dir = os.path.dirname(to_zip_filepath)
-            zip_input.extractall(to_dir)
+            zip_input.extractall(cache_dir)
 
-            # Reading synonyms collection
-            stemmer = Default.create_default_stemmer()
-            synonyms_filepath = os.path.join(to_dir, "synonyms.txt")
-            synonyms = SynonymsCollection.from_file(synonyms_filepath, stemmer=stemmer)
+        # Reading synonyms collection.
+        print("Reading synonyms collection ...")
+        stemmer = Default.create_default_stemmer()
+        synonyms_filepath = join(cache_dir, "synonyms.txt")
+        synonyms = SynonymsCollection.from_file(synonyms_filepath, stemmer=stemmer)
 
-            # Initialize all the related from synonyms collection information.
-            self.__init_from_synonyms(synonyms)
+        # Initialize all the related from synonyms collection information.
+        self.__init_from_synonyms(synonyms)
 
-            target_filepath = os.path.join(to_dir, "collection-neut.txt")
-            with open(os.path.join(to_dir, "collection.txt"), 'r') as f_src:
-                with open(target_filepath, 'w') as f_to:
-                    log = self.__process(f_src=f_src, f_to=f_to)
+        # Start neutral opinion annotation process.
+        print("Run processing ...")
+        source_filepath = join(cache_dir, "collection.txt")
+        target_filepath = join(cache_dir, "collection-neut.txt")
+        with open(source_filepath, 'r') as f_src:
+            with open(target_filepath, 'w') as f_to:
+                neut_logger = self.__process(f_src=f_src, f_to=f_to)
 
-                # Saving.
-                target_zip = zipfile.ZipFile(to_zip_filepath, "w")
-                target_zip.write(target_filepath)
-                target_zip.close()
+        # Replacing old file in cache dir with a new one.
+        os.system('mv {} {}'.format(target_filepath, source_filepath))
 
-        if log is not None:
+        # Saving everything in a new archive file.
+        target_zip_filepath = join(dirname(from_zip_filepath),
+                                   get_target_filename(from_zip_filepath))
+
+        if neut_logger is not None:
             with open(log_filepath, 'w') as f:
-                for line in log.iter_data():
+                for line in neut_logger.iter_data():
                     f.write(line)
 
         with open(used_locations_filepath, 'w') as f:
@@ -70,6 +82,10 @@ class RuAttitudeExpansion(object):
                 f.write("'{entry}': {count}\n".format(entry=key, count=value))
 
         self.__opin_stat_printer.print_statistic(neut_opin_stat_filepath)
+
+        archive_all_files_in_zip(to_zip_filepath=target_zip_filepath,
+                                 source_dir=cache_dir)
+
 
     # endregion
 
@@ -90,7 +106,7 @@ class RuAttitudeExpansion(object):
         opinions_list = []
         objects_list = []
 
-        log = Log()
+        neut_logger = NeutralOpinionExtractionLogger()
 
         docs_set = set()
 
@@ -115,23 +131,23 @@ class RuAttitudeExpansion(object):
             if AttitudeKey in line:
                 opinion = RuAttitudeExpansion.__parse_sentence_opin(line)
                 opinions_list.append(opinion)
-                log.reg_existed_opin()
+                neut_logger.reg_existed_opin()
 
             if ContextsPrinter.NEWS_SEP_KEY.strip() in line:
-                log.reg_doc()
+                neut_logger.reg_doc()
 
             if FrameVariantKey in line:
                 for pair in self.__provide_netral_opinion(objects_list, opinions_list):
                     s = self.__compose_and_register(s_obj=pair[0], t_obj=pair[1])
                     f_to.write(s)
-                    log.reg_new_opin(1)
+                    neut_logger.reg_new_opin(1)
 
-                log.reg_sent()
+                neut_logger.reg_sent()
 
             f_to.write(line)
 
         assert(len(processed_sentences) == 0)
-        return log
+        return neut_logger
 
     def __compose_and_register(self, s_obj, t_obj):
         assert(isinstance(s_obj, ExtendedAuthTextObject))

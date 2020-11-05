@@ -1,4 +1,4 @@
-class Log:
+class NeutralOpinionExtractionLogger:
     def __init__(self):
         self.new_opinions = 0
         self.new_opinions = 0
