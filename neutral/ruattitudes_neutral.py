@@ -252,9 +252,10 @@ class RuAttitudeExpansion(object):
 
         is_auth = '<AUTH>' in line
 
-        t_begin = line.index('t:')
+        type_template = 't:'
+        t_begin = line.index(type_template)
         t_end = line.index('<', t_begin) if is_auth else len(line)
-        obj_type = line[t_begin+5:t_end].strip()
+        obj_type = line[t_begin+len(type_template):t_end].strip()
 
         sg_from = line.index('si:{')
         sg_to = line.index('}', sg_from)
