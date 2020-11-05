@@ -212,7 +212,7 @@ class RuAttitudeExpansion(object):
             # We consider source as authorized object, i.e. [GPE, PERSON, ORG]
             # According to OntoNotes notation.
             if not source_obj.IsAuthorized:
-                return
+                return True
 
             if self.__check_target_to_be_discarded(target_obj):
                 return True
