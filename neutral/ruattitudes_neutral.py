@@ -186,47 +186,52 @@ class RuAttitudeExpansion(object):
                 o1 = objects_list[i]
                 o2 = objects_list[j]
 
-                if not self.__check_existed_and_correctness(opinion_list, obj_1=o1, obj_2=o2):
+                if not self.__check_opinion_existance_and_correctness(opinion_list, source_obj=o1, target_obj=o2):
                     yield o1, o2
 
-                if not self.__check_existed_and_correctness(opinion_list, obj_1=o2, obj_2=o1):
+                if not self.__check_opinion_existance_and_correctness(opinion_list, source_obj=o2, target_obj=o1):
                     yield o2, o1
 
-    def __check_existed_and_correctness(self, opinion_list, obj_1, obj_2):
-        assert(isinstance(obj_1, ExtendedAuthTextObject))
-        assert(isinstance(obj_2, ExtendedAuthTextObject))
+    def __check_opinion_existance_and_correctness(self, opinion_list, source_obj, target_obj):
+        assert(isinstance(source_obj, ExtendedAuthTextObject))
+        assert(isinstance(target_obj, ExtendedAuthTextObject))
 
-        s1 = obj_1.SynonymIndex
-        s2 = obj_2.SynonymIndex
+        s_source = source_obj.SynonymIndex
+        s_target = target_obj.SynonymIndex
 
         for pair in opinion_list:
 
             # Skip unknown
-            if s1 < 0: # or s2 < 0:
+            if s_source < 0: # or s_target < 0:
                 return True
 
             # Skip synonymous
-            if s1 == s2:
+            if s_source == s_target:
                 return True
 
-            if self.__check_tartget_to_be_discarded(obj_2):
+            # We consider source as authorized object, i.e. [GPE, PERSON, ORG]
+            # According to OntoNotes notation.
+            if not source_obj.IsAuthorized:
+                return
+
+            if self.__check_target_to_be_discarded(target_obj):
                 return True
 
-            if pair[0] == s1 and pair[1] == s2:
+            if pair[0] == s_source and pair[1] == s_target:
                 return True
 
-            if pair[1] == s1 and pair[0] == s2:
+            if pair[1] == s_source and pair[0] == s_target:
                 return True
 
         return False
 
-    def __check_tartget_to_be_discarded(self, obj):
-        assert(isinstance(obj, ExtendedAuthTextObject))
+    def __check_target_to_be_discarded(self, target_obj):
+        assert(isinstance(target_obj, ExtendedAuthTextObject))
 
-        if obj.Type != self.__ner_loc_type:
+        if target_obj.Type != self.__ner_loc_type:
             return True
 
-        value = obj.get_value()
+        value = target_obj.get_value()
         if value in self.__locations_values_to_ignore:
             return True
 
@@ -235,7 +240,7 @@ class RuAttitudeExpansion(object):
             if token in self.__locations_values_to_ignore:
                 return True
 
-        if obj.SynonymIndex in self.__locations_syn_ids_to_ignore:
+        if target_obj.SynonymIndex in self.__locations_syn_ids_to_ignore:
             return True
 
         if value not in self.__used_locations:
