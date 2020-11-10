@@ -134,7 +134,7 @@ class RuAttitudeExpansion(object):
                 # attitudes should be also authorized. Therefore we use special
                 # flag in order to update state of the related objects.
                 if obj.Type == self.__ner_loc_type:
-                    line += " {}".format(self.auth_tag)
+                    line = "{orig} {tag}\n".format(orig=line.strip(), tag=self.auth_tag)
 
             if AttitudeKey in line:
                 opinion = RuAttitudeExpansion.__parse_sentence_opin(line)
