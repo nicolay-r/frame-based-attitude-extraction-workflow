@@ -123,8 +123,8 @@ class RuAttitudeExpansion(object):
 
             if DiffContextsPrinter.TEXT_KEY in line or \
                DiffContextsPrinter.TITLE_KEY in line:
-                objects_list = []
-                opinions_list = []
+                objects_list.clear()
+                opinions_list.clear()
 
             if ObjectKey in line:
                 obj = self.__parse_object(line)
@@ -151,6 +151,9 @@ class RuAttitudeExpansion(object):
                     neut_logger.reg_new_opin(1)
 
                 neut_logger.reg_sent()
+
+                objects_list.clear()
+                opinions_list.clear()
 
             f_to.write(line)
 
