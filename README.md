@@ -44,6 +44,8 @@ Considered to run scripts which organized in the related [folder](scripts) as fo
     * NER cache [[readme]](scripts/cache/ner/README.md);
     * Frames cache [[readme]](scripts/cache/frames/README.md);
 * **Step 2.** Gather synonyms collection:
+    1. Extracting object values;
+    2. Grouping into single synonyms collection.
 ```
 pushd .
 cd ../scripts/synonyms/
@@ -54,14 +56,16 @@ python3 -u syn_0_extract_obj_values.py \
 		--source-dir <SOURCE_DIR>
 
 python3 -u syn_1_compose_collection.py \
-		--ru-thes-nouns Thesaurus/synsets.N.xml \
+		--ru-thes-nouns <THESAURUS_FOLDER>/synsets.N.xml \
 		--obj-values-dir .vocab/ \
 		--output-dir <OUTPUT_DIR>
 popd
 ```
-* **Step 3.** `re` -- perform relation extraction with `--task ext_by_frames` -- 
-is a stage 1. of the workflow (pair list gathering):
+* **Step 3.** Apply `re`script with `--task ext_by_frames` 
+    * is a stage 1. of the workflow (pair list gathering):
 ```bash
+pushd .
+cd ../scripts/re/
 python3 -u scripts/re/run.py \
 	--task ext_by_frames \
 	--use-ner-cache-only \
@@ -72,18 +76,24 @@ python3 -u scripts/re/run.py \
 	--rusentiframes ../../data/rusentiframes-20.json \
 	--output-dir <OUTPUT_DIR> \
 	--source-dir <SOURCE_COLLECTION_DIR>
+popd
 ```
 * **Step 4.** Filter most relevant pairs from pair list:
 ```
+pushd .
+cd ../scripts/re_post/
 python3 -u filter_stat.py --min-bound 0.65 --min-count 25 \
      --stat-file <OUTPUT_DIR>/ext_by_frames/stat.txt \
      --synonyms <SYNONYMS_COLECTION> \
      --fast
+popd
 ```
-* **Step 5.** Apply `re` script with `--task ext_diff` -- 
-is a stage 2. of the workflow:
+* **Step 5.** Apply `re` script with `--task ext_diff` 
+    * is a stage 2. of the workflow:
 ```
-python3 -u scripts/re/run.py \
+pushd .
+cd ../scripts/re/
+python3 -u run.py \
 	--task ext_diff \
 	--use-ner-cache-only \
 	--ner-type ontonotes-bert-mult \
@@ -94,6 +104,7 @@ python3 -u scripts/re/run.py \
 	--synonyms <SYNONYMS_COLLECTION> \
 	--output-dir <OUTPUT_DIR> \
 	--source-dir <SOURCE_DIR> 
+popd
 ```
     
 ## Default News Reader
