@@ -9,9 +9,8 @@ It provides scripts for sentiment attitude extraction using frame-based method.
 ## Dependencies
 
 * python == 3.6
-* tqdm >= 4.19.5
 * sqlite3
-* AREkit == [0.19.5](https://github.com/nicolay-r/AREkit/tree/0.19.5-bdr-elsevier-2020-py3)
+* arekit == [0.19.5](https://github.com/nicolay-r/AREkit/tree/0.19.5-bdr-elsevier-2020-py3)
     * Utilized as a core library for text parsing, frames reading, stemming application, etc.
 * ner == 0.0.2 
     * Optional, for `deep-ner` NER model
@@ -19,7 +18,7 @@ It provides scripts for sentiment attitude extraction using frame-based method.
     * Optional, for `bert-mult-ontonotes` NER model
     
 ## Resources
-* ###### [RuWordNet](https://ruwordnet.ru/en/) [Contact with authors to download]
+* [RuWordNet](https://ruwordnet.ru/en/) [Contact with authors to download]
 * [RuSentiFrames-2.0](https://github.com/nicolay-r/RuSentiFrames)
 
 # Installation
@@ -120,4 +119,4 @@ Please refer to the [simple news reader](texts/readers/simple.py):
 3. Synonyms collection [[readme]](scripts/synonyms/README.md).
 
 ## References
-> TODO.
+> To be added.
