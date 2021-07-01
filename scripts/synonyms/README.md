@@ -1,3 +1,0 @@
-## Synonyms Collection development
-> TODO.
-

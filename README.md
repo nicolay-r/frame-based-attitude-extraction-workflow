@@ -41,7 +41,7 @@ cd data && ./download.sh
 Considered to run scripts which organized in the related [folder](scripts) as follows:
 * **Step 1.** `cache`  -- for caching extracted from document data into sqlite tables:
     * NER cache [[readme]](scripts/cache/ner/README.md);
-    * Frames cache [[readme]](scripts/cache/frames/README.md);
+    * Frames cache [PROVIDE TUTORIAL];
 * **Step 2.** Gather synonyms collection:
     1. Extracting object values;
     2. Grouping into single synonyms collection.
@@ -114,9 +114,6 @@ Please refer to the [simple news reader](texts/readers/simple.py):
 * Every sentence at new line, where first one is a title.
 
 > TODO#1. Provide example and simple reader.
-
-## Optional: caching resources for processing speed enhancement 
-3. Synonyms collection [[readme]](scripts/synonyms/README.md).
 
 ## References
 > To be added.
