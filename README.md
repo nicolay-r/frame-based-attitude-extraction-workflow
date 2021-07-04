@@ -45,10 +45,15 @@ cd data && ./download.sh
 
 ## Apply processing
 
+**Problem:** BERT-based-ontonotes-mult model for NER (`deep-pavlov-1.11.0`), consumes a significant amount of time per a single document which
+reduces the speed in a whole text processing pipeline.
+
+**Solution:** Employ a cache for NER results. We utilize `sqlite` as a storage for such data.
+
 Considered to run scripts which organized in the related [folder](scripts) as follows:
-1. `cache`  -- for caching extracted from document data into sqlite tables:
-    * NER cache [[readme]](scripts/cache/ner/README.md);
-    * Frames cache [[script]]();
+1. Caching extracted data from document into sqlite tables:
+    * NER data [[script]](step1_ner_cache.sh);
+    * Frames data [[script]](step1_frames_cache.sh);
 2. Gather synonyms collection [[script]](step2_cache_synonyms.sh):
     1. Extracting object values;
     2. Grouping into single synonyms collection.
