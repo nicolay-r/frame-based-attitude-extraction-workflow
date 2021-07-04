@@ -1,0 +1,1 @@
+This folder considered for RuWordNet thesaurus.
