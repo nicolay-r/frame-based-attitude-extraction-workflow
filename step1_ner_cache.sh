@@ -3,7 +3,6 @@ pushd .
 cd scripts/cache/ner
 
   ROOT=../..
-  VOCAB_DIR=$ROOT/data/.vocab
 
   python3 -u run_0_init.py \
       --news-reader simple \
