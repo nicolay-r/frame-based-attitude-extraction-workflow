@@ -5,11 +5,10 @@ cd scripts/synonyms/
   ROOT=../..
   VOCAB_DIR=$ROOT/data/.vocab
 
-  mkdir -p $VOCAB_DIR
-
   python3 -u syn_0_extract_obj_values.py \
-      --ner-type ontonotes-bert-mult --output-dir $VOCAB_DIR \
-      --ner-cache-filepath $ROOT/data/cache/ner.sqldb \
+      --ner-type ontonotes-bert-mult \
+      --output-dir $VOCAB_DIR \
+      --ner-cache-filepath $ROOT/data/source/ner_cache_ontonotes-bert-mult.db \
       --source-dir $ROOT/data/source
 
   # Generates file synonyms.txt at output dir.

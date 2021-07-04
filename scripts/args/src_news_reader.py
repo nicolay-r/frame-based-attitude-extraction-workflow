@@ -15,7 +15,7 @@ class SourceNewsReaderArg(BaseArg):
             news_2017_module = importlib.import_module("private.datasets.news_2017")
             return news_2017_module.NewsReader2017Collection(messages_limit=None)
         elif value == SourceNewsReaderArg.SimpleNewsReader:
-            return SimpleNewsReader("test.txt")
+            return SimpleNewsReader("sample.txt")
 
     @staticmethod
     def add_argument(parser):

@@ -48,15 +48,18 @@ cd data && ./download.sh
 Considered to run scripts which organized in the related [folder](scripts) as follows:
 1. `cache`  -- for caching extracted from document data into sqlite tables:
     * NER cache [[readme]](scripts/cache/ner/README.md);
-    * Frames cache [PROVIDE TUTORIAL];
+    * Frames cache [[script]]();
 2. Gather synonyms collection [[script]](step2_cache_synonyms.sh):
     1. Extracting object values;
     2. Grouping into single synonyms collection.
 3. Apply `re`script with `--task ext_by_frames` [[script]](step3_exatract_pairs.sh)
     * is a stage 1. of the workflow (pair list gathering)
-4. Filter most relevant pairs from pair list [[script]](step4_filter_relevant_pairs.sh)
+4. Filter most relevant pairs from pair list [[script]](step4_filter_pairs.sh)
 5. Apply `re` script with `--task ext_diff` [[script]](step5_extract_attitudes.sh)
     * is a stage 2. of the workflow.
+    
+## Neutral Annotation
+> TODO.
 
 ## References
 > To be added.

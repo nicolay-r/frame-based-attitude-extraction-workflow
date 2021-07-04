@@ -1,19 +1,15 @@
 #!/bin/bash
 pushd .
+cd scripts/cache/frames/
 
-  cd scripts/re/
-  ROOT=../..
+  ROOT=../../..
 
-  python3 -u run.py \
-      --task ext_by_frames \
-      --use-ner-cache-only \
+  # Results will be saved at data/source
+  python3 -u run_0_init.py \
       --news-reader simple \
       --ner-type ontonotes-bert-mult \
       --ner-cache-filepath $ROOT/data/source/ner_cache_ontonotes-bert-mult.db \
-      --frames-cache-dir $ROOT/data/source/ \
-      --synonyms $ROOT/data/synonyms/synonyms.txt \
+      --parse-frames-in-sentences \
       --rusentiframes $ROOT/data/rusentiframes-20.json \
-      --output-dir $ROOT/data/output \
       --source-dir $ROOT/data/source
-
 popd
