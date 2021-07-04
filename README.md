@@ -27,10 +27,6 @@ git clone --single-branch --branch 0.19.5-bdr-elsevier-2020-py3 git@github.com:n
 # Download python dependencies
 pip install -r requirements.txt
 ```
-* Step 2: Download `rusentiframes-20.json` lexicon:
-```bash
-cd data && ./download.sh
-```
     
 # Usage 
 
@@ -40,6 +36,9 @@ cd data && ./download.sh
 2. Download [RuWordNet](https://ruwordnet.ru/en/) and place at `data/thesaurus/`;
     - [Contact with authors to download]
 3. Download [RuSentiFrames-2.0](https://github.com/nicolay-r/RuSentiFrames) collection;
+```bash
+cd data && ./download.sh
+```
 4. Setup news reader:
     - [simple news reader](texts/readers/simple.py);
     - declare custom by nesting a base class.
