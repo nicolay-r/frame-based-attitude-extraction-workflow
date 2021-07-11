@@ -1,9 +1,4 @@
-## NER Cache development
-
-* `run_0_init.py` -- Database initialization (for a particular part/subfolder in a source);
-* `run_1_gen_merge_sql.py` -- Generates sql script (`merge.sql`) for merging results of a separated `*.db` databases:
-
-### NER Cache related Q/A
+### Q/A
 
 * How to gather all the databases in a single archive?
 ```
