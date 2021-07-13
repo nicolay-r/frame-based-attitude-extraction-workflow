@@ -1,10 +1,13 @@
 class NeutralOpinionExtractionLogger:
+
     def __init__(self):
         self.new_opinions = 0
         self.new_opinions = 0
         self.existed_opinions = 0
         self.sentences = 0
         self.documents = 0
+
+    # region properties
 
     @property
     def NewOpinions(self):
@@ -21,6 +24,8 @@ class NeutralOpinionExtractionLogger:
     @property
     def Documents(self):
         return self.documents
+
+    # endregion
 
     def reg_doc(self):
         self.documents += 1

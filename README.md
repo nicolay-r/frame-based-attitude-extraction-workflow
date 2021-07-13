@@ -39,9 +39,9 @@ pip install -r requirements.txt
 ```bash
 cd data && ./download.sh
 ```
-4. Setup news reader:
-    - [simple news reader](texts/readers/simple.py);
-    - declare custom by nesting a base class.
+4. Provide news reader:
+    - default news reader [[code]](texts/readers/simple.py)/[[sample]](data/source/sample.txt);
+    - implement custom reader based on `BaseNewsReader` API.
 
 ## Apply processing
 
@@ -50,7 +50,9 @@ reduces the speed in a whole text processing pipeline.
 
 **Solution:** Employ a cache for NER results. We utilize `sqlite` as a storage for such data.
 
-Considered to run scripts which organized in the related [folder](scripts) as follows:
+### Sentiment Attitude Annotation
+
+Considered to run scripts which organized in the related [folder](scripts) in the following order:
 1. Caching extracted data from document into sqlite tables:
     * NER data [[script]](step1_ner_cache.sh);
     * Frames data [[script]](step1_frames_cache.sh);
@@ -63,8 +65,12 @@ Considered to run scripts which organized in the related [folder](scripts) as fo
 5. Apply `re` script with `--task ext_diff` [[script]](step5_extract_attitudes.sh)
     * is a stage 2. of the workflow.
     
-## Neutral Annotation
-> TODO.
+### Expand with Neutral Attitude Annotation
+6. Prepare archieved (`*.zip`) collection from step #5, which includes:
+    * `synonym.txt` -- list of synonyms.
+    * `collection.txt` -- RuAttitudes collection.
+7. Run [[script]](step6_neutral_attitudes.sh)
+    * Use `--src-zip-filepath` to pass the archived collection path from step #6.
 
 ## References
 > To be added.
