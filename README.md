@@ -28,5 +28,16 @@ Please refer to the base class [API](texts/readers/base.py)
 2. Frames cache [[readme]](scripts/cache/frames/README.md);
 3. Synonyms collection [[readme]](scripts/synonyms/README.md).
 
-## References
-> TODO.
+# References
+```
+@inproceedings{rusnachenko2021language,
+    title={Language Models Application in Sentiment Attitude Extraction Task},
+    author={Rusnachenko, Nicolay},
+    booktitle={Proceedings of the Institute for System Programming of the RAS (Proceedings of ISP RAS), vol.33},
+    year={2021},
+    number={3},
+    pages={199--222},
+    authorvak={true},
+    authorconf={false},
+    language={russian}
+}
