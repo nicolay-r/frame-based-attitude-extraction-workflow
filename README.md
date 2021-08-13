@@ -72,5 +72,16 @@ Considered to run scripts which organized in the related [folder](scripts) in th
 7. Run [[script]](step6_neutral_attitudes.sh)
     * Use `--src-zip-filepath` to pass the archived collection path from step #6.
 
-## References
-> To be added.
+# References
+```
+@inproceedings{rusnachenko2021language,
+    title={Language Models Application in Sentiment Attitude Extraction Task},
+    author={Rusnachenko, Nicolay},
+    booktitle={Proceedings of the Institute for System Programming of the RAS (Proceedings of ISP RAS), vol.33},
+    year={2021},
+    number={3},
+    pages={199--222},
+    authorvak={true},
+    authorconf={false},
+    language={russian}
+}
