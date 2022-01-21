@@ -1,5 +1,4 @@
 from core.processing.lemmatization.base import Stemmer
-from texts.extraction.default import Default
 from texts.extraction.text_parser.base import process_sentence_core_static
 from texts.objects.cache.base import BaseObjectCache
 from texts.readers.utils import NewsInfo
@@ -10,14 +9,11 @@ class TextObjectValuesExtractor:
     Extracts values of objects, recognized by NER models, which is stored in ner_cache
     """
 
-    def __init__(self, ner_cache, stemmer, default_auth_check):
+    def __init__(self, stemmer, ner_extractor):
         assert(isinstance(stemmer, Stemmer))
 
         self.__stemmer = stemmer
-        self.__ner_extractor = Default.create_ner_extractor(
-            ner=None,
-            ner_cache=ner_cache,
-            default_auth_check=default_auth_check)
+        self.__ner_extractor = ner_extractor
 
     def iter_for_sentence(self, news_info, s_ind):
         """ Processing title by default

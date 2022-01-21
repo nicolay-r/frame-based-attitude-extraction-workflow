@@ -53,10 +53,10 @@ if __name__ == "__main__":
     # Init obj values extractor.
     ner_class_type = Default.get_class_by_ner_name(ner_type)
     text_object_authorizer = TextObjectAuthorizer(ner_type=ner_class_type)
-    obj_values_extractor = TextObjectValuesExtractor(
-        ner_cache=ner_cache,
-        stemmer=Default.create_default_stemmer(),
-        default_auth_check=lambda text_obj: text_object_authorizer.is_auth(text_obj))
+    ner_extractor = Default.create_ner_extractor(ner=None, ner_cache=ner_cache,
+                                                 default_auth_check=default_auth_check)
+    obj_values_extractor = TextObjectValuesExtractor(stemmer=Default.create_default_stemmer(),
+                                                     ner_extractor=ner_extractor)
 
     create_dir(output_dir)
     print("Output dir: {}".format(output_dir))
