@@ -17,14 +17,3 @@ class NewsSentenceInfo:
     @property
     def SentenceIndex(self):
         return self.__sent_id
-
-    @classmethod
-    def create_for_title(cls, news_id):
-        return cls(news_id=news_id,
-                   sent_id=cls.TITLE_SENT_IND)
-
-    @classmethod
-    def register_sentence(cls, news_id, sent_ind):
-        assert (sent_ind > 0)
-        return cls(news_id=news_id,
-                   sent_id=sent_ind)
