@@ -50,16 +50,16 @@ class DeepPavlovBertNERWrap(NamedEntityRecognition):
         gathered_labels_seq = []
 
         for i, sequence in enumerate(sequences):
-            _, labels = self.tokens_to_terms(terms=sequence,
-                                             tokens=tokens[i],
-                                             labels=labels[i])
+            _, labels = self.__tokens_to_terms(terms=sequence,
+                                               tokens=tokens[i],
+                                               labels=labels[i])
 
             gathered_labels_seq.append(self.gather(labels))
 
         return gathered_labels_seq
 
     @staticmethod
-    def tokens_to_terms(terms, tokens, labels):
+    def __tokens_to_terms(terms, tokens, labels):
         def __cur_term():
             return len(joined_tokens) - 1
 
