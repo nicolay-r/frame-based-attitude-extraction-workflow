@@ -17,10 +17,6 @@ It provides scripts for sentiment attitude extraction using frame-based method.
 * deep-pavlov == 1.11.0 
     * Optional, for `bert-mult-ontonotes` NER model
     
-## Resources
-* [RuWordNet](https://ruwordnet.ru/en/) [Contact with authors to download]
-* [RuSentiFrames-2.0](https://github.com/nicolay-r/RuSentiFrames)
-
 # Installation
 
 * Step 1: Install dependencies.
@@ -31,89 +27,61 @@ git clone --single-branch --branch 0.19.5-bdr-elsevier-2020-py3 git@github.com:n
 # Download python dependencies
 pip install -r requirements.txt
 ```
-* Step 2: Download `rusentiframes-20.json` lexicon:
-```bash
-cd data && ./download.sh
-```
     
 # Usage 
 
-Considered to run scripts which organized in the related [folder](scripts) as follows:
-* **Step 1.** `cache`  -- for caching extracted from document data into sqlite tables:
-    * NER cache [[readme]](scripts/cache/ner/README.md);
-    * Frames cache [PROVIDE TUTORIAL];
-* **Step 2.** Gather synonyms collection:
+## Prepare data
+
+1. Place the news collection at `data/source/`;
+2. Download [RuWordNet](https://ruwordnet.ru/en/) and place at `data/thesaurus/`;
+    - [Contact with authors to download]
+3. Download [RuSentiFrames-2.0](https://github.com/nicolay-r/RuSentiFrames) collection;
+```bash
+cd data && ./download.sh
+```
+4. Provide news reader:
+    - default news reader [[code]](texts/readers/simple.py)/[[sample]](data/source/sample.txt);
+    - implement custom reader based on `BaseNewsReader` API.
+
+## Apply processing
+
+**Problem:** BERT-based-ontonotes-mult model for NER (`deep-pavlov-1.11.0`), consumes a significant amount of time per a single document which
+reduces the speed in a whole text processing pipeline.
+
+**Solution:** Employ a cache for NER results. We utilize `sqlite` as a storage for such data.
+
+### Sentiment Attitude Annotation
+
+Considered to run scripts which organized in the related [folder](scripts) in the following order:
+1. Caching extracted data from document into sqlite tables:
+    * NER data [[script]](step1_ner_cache.sh);
+    * Frames data [[script]](step1_frames_cache.sh);
+2. Gather synonyms collection [[script]](step2_cache_synonyms.sh):
     1. Extracting object values;
     2. Grouping into single synonyms collection.
-```
-pushd .
-cd ../scripts/synonyms/
-
-python3 -u syn_0_extract_obj_values.py \
-		--ner-type ontonotes-bert-mult --output-dir ./.vocab \
-		--ner-cache-filepath <NER_CACHE_SQLITE3_DB> \
-		--source-dir <SOURCE_DIR>
-
-python3 -u syn_1_compose_collection.py \
-		--ru-thes-nouns <THESAURUS_FOLDER>/synsets.N.xml \
-		--obj-values-dir .vocab/ \
-		--output-dir <OUTPUT_DIR>
-popd
-```
-* **Step 3.** Apply `re`script with `--task ext_by_frames` 
-    * is a stage 1. of the workflow (pair list gathering):
-```bash
-pushd .
-cd ../scripts/re/
-python3 -u scripts/re/run.py \
-	--task ext_by_frames \
-	--use-ner-cache-only \
-	--ner-type ontonotes-bert-mult \
-	--ner-cache-filepath <PATH_TO_SQLITE3_DB> \
-	--frames-cache-dir <FOLDER_THAT_CONTAINS_SQLITE3_DB> \  
-	--synonyms <SYNONYMS_COLLECTION> \
-	--rusentiframes ../../data/rusentiframes-20.json \
-	--output-dir <OUTPUT_DIR> \
-	--source-dir <SOURCE_COLLECTION_DIR>
-popd
-```
-* **Step 4.** Filter most relevant pairs from pair list:
-```
-pushd .
-cd ../scripts/re_post/
-python3 -u filter_stat.py --min-bound 0.65 --min-count 25 \
-     --stat-file <OUTPUT_DIR>/ext_by_frames/stat.txt \
-     --synonyms <SYNONYMS_COLECTION> \
-     --fast
-popd
-```
-* **Step 5.** Apply `re` script with `--task ext_diff` 
-    * is a stage 2. of the workflow:
-```
-pushd .
-cd ../scripts/re/
-python3 -u run.py \
-	--task ext_diff \
-	--use-ner-cache-only \
-	--ner-type ontonotes-bert-mult \
-	--diff-pairs-list <OUTPUT_DIR>/ext_by_frames/25-0.65-stat.txt \
-	--ner-cache-filepath <PATH_TO_SQLITE3_DB> \
-	--frames-cache-dir <FOLDER_THAT_CONTAINS_SQLITE3_DB> \  
-	--parse-frames-in-sentences \
-	--synonyms <SYNONYMS_COLLECTION> \
-	--output-dir <OUTPUT_DIR> \
-	--source-dir <SOURCE_DIR> 
-popd
-```
+3. Apply `re`script with `--task ext_by_frames` [[script]](step3_exatract_pairs.sh)
+    * is a stage 1. of the workflow (pair list gathering)
+4. Filter most relevant pairs from pair list [[script]](step4_filter_pairs.sh)
+5. Apply `re` script with `--task ext_diff` [[script]](step5_extract_attitudes.sh)
+    * is a stage 2. of the workflow.
     
-## Default News Reader
+### Expand with Neutral Attitude Annotation
+6. Prepare archieved (`*.zip`) collection from step #5, which includes:
+    * `synonym.txt` -- list of synonyms.
+    * `collection.txt` -- RuAttitudes collection.
+7. Run [[script]](step6_neutral_attitudes.sh)
+    * Use `--src-zip-filepath` to pass the archived collection path from step #6.
 
-Please refer to the [simple news reader](texts/readers/simple.py):
-* Reading from a single file;
-* Documents separation via `\n`;
-* Every sentence at new line, where first one is a title.
-
-> TODO#1. Provide example and simple reader.
-
-## References
-> To be added.
+# References
+```
+@inproceedings{rusnachenko2021language,
+    title={Language Models Application in Sentiment Attitude Extraction Task},
+    author={Rusnachenko, Nicolay},
+    booktitle={Proceedings of the Institute for System Programming of the RAS (Proceedings of ISP RAS), vol.33},
+    year={2021},
+    number={3},
+    pages={199--222},
+    authorvak={true},
+    authorconf={false},
+    language={russian}
+}
